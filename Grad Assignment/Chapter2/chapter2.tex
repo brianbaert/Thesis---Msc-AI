@@ -135,6 +135,7 @@ Task-IL scenarios performed equally well as opposed to the baseline method, doma
 \section{Background}
 \label{sec:Background}
 \subsection{CL Concepts and formulation}
+\label{subsec:cl_concepts}
 We follow the framework proposed by \citep{lesort2020continual}. 
 In the context of continual learning, the data can be considered as coming from a (potentially infinite) sequence $\mathbf{D}$ of distributions that are not known in advance. This sequence, denoted as $\mathbf{D} = \{ D_{1}, ..., D_{N} \}$, is defined over the random variables $X$ and $Y$, where $X$ represents the input and $Y$ represents the output. At each time step $i$, the algorithm receives a training set $Tr_{i}$ consisting of one or more observations drawn from the distribution $D_{i}$. A learning task is marked by a distinct task label $t\in \{ 1,\dots,T\}$ and its intended goal or objective function $h^{*}$.
 
@@ -154,13 +155,7 @@ where
 \[
     \mathbf{L}_{t} = \EX \left( L \left( y, f_{\theta} (x) \right) \right)
 \]
-
-A challenging fact, as the data from previous tasks $\mathbf{D}_{t}$ for $t\in \{ 1, \dots, t_{c} - 1 \}$ is not available. 
-In order to keep the previously learned knowledge, the following objective function is minimized:
-
-\[
-\mathbf{L}_{t_{c}} + \alpha \sum_{t=1}^{t_{c}-1}
-\]
+and $\EX$ is the expectation over data sampled from a distribution $\mathbf{D}_t$. \\
 
 \subsection{Catastrophic forgetting}
 \label{ref:subsub_catastrophic}
@@ -169,7 +164,13 @@ The dilemma (or trade-off) of Stability-Plasticity pertains to the capacity to i
 
 
 \subsection{CL training methods}
-In the subsequent section, we will outline a few of the frequently employed training techniques.
+In the subsequent section, we will outline a few of the frequently employed training techniques. Most of the training strategies follow the guidelines of General Continual Learning (GCL) as proposed by \citep{farquhar2018towards}. 
+\begin{itemize}
+    \item Do not rely on task boundaries.
+    \item No oracle with task identifiers during testing.
+    \item A bounded constant memory throughout training.
+\end{itemize}
+
 \subsubsection{Elastic Weight Consolidation}
 \label{sec:ewc}
 The study by \citep{kirkpatrick2017overcoming} and \citep{de2021continual} explains \acrshort{ewc} is a regularization method designed to address the issue of catastrophic forgetting in neural networks. It achieves this by constraining the learning process. The main concept behind \acrshort{ewc} involves incorporating a quadratic penalty term into the standard loss function. This penalty term takes into account the difference between the current weight values and the optimal weights that were obtained during the previous task learning phase. By doing so, \acrshort{ewc} minimises interference between tasks and ensures a balance between learning new tasks and retaining knowledge from previous tasks.
@@ -215,11 +216,11 @@ The \acrshort{fromp} training strategy is a novel approach in \acrshort{cl} addr
 \label{sec:gem}
 The \acrlong{cl} (\acrshort{cl}) strategy, proposed by \citep{lopez2017gradient}, is a model that overcomes the limitations imposed by Empirical Risk Minimization \citep{vapnik1991principles} on other supervised learning techniques. To bridge this gap, the \acrlong{gem} (\acrshort{gem}) model incorporates an episodic memory $M_t$ that selectively stores a subset of observed examples from a specific task $t$. The memory capacity is limited to a total of $M$ locations, with each task having $m=\frac{M}{T}$ memories. The examples stored in $M$ are utilized to determine predictor functions $f_{\theta}$ by minimising the corresponding loss function
 \[
-L(f_{\theta}, M_{k}) = \frac{1}{|M_{k}|} \sum_{(x_i, k, y_i) \in M_{k}} L(f_{\theta}(x_i , k), y_i)
+\mathbf{L}(f_{\theta}, M_{k}) = \frac{1}{|M_{k}|} \sum_{(x_i, k, y_i) \in M_{k}} \mathbf{L}(f_{\theta}(x_i , k), y_i)
 \]
 Overfitting to the stored examples in $M_{k}$ is a common issue when minimizing the loss at the current example along with the above loss function. To address this problem, they solve the following optimization problem:
 \[ 
-\underset{\theta}{\mathrm{argmin }} \; L(f_{\theta}(x,t),y) \text{ subject to } L(f_{\theta}, M_{k}) \leq L(f_{\theta}^{t-1}, m_k), \forall k<t 
+\underset{\theta}{\mathrm{argmin }} \; \mathbf{L}(f_{\theta}(x,t),y) \text{ subject to } \mathbf{L}(f_{\theta}, M_{k}) \leq \mathbf{L}(f_{\theta}^{t-1}, m_k), \forall k<t 
 \]
 Here, $f^{t-1}_{\theta}$ represents the previous predictor state at the end of learning task $t-1$. The detailed solution can be found in the original paper by \citep{lopez2017gradient}.
 
@@ -228,7 +229,7 @@ Here, $f^{t-1}_{\theta}$ represents the previous predictor state at the end of l
 \label{sec:a-gem}
 \citep{chaudhry2018efficient} proposes a more efficient version of \acrshort{gem} where it tries to ensure that at every training step the average episodic memory loss over the previous tasks does not increase. Formally the objective of \acrshort{agem} is
 \[ 
-\underset{\theta}{\mathrm{argmin }} \; L(f_{\theta} D_{t}) \text{ such that } L(f_{\theta}, M) \leq L(f_{\theta}^{t-1}, M), \text{ where } M = \underset{k<t}{\bigcup} M_{k} 
+\underset{\theta}{\mathrm{argmin }} \; \mathbf{L}(f_{\theta} D_{t}) \text{ such that } \mathbf{L}(f_{\theta}, M) \leq \mathbf{L}(f_{\theta}^{t-1}, M), \text{ where } M = \underset{k<t}{\bigcup} M_{k} 
 \]
 The detailed solution and update rule can be found in the original paper by \citep{chaudhry2018efficient}.
 
@@ -236,35 +237,66 @@ The detailed solution and update rule can be found in the original paper by \cit
 As described in \citep{rebuffi2017icarl} iCaRL (Incremental Classifier and Representation Learning) allows learning in a class incremental way as depicted in figure \ref{fig:icarl}. It learns strong classifiers and a data representation simultaneously. In iCaRL, the model learns to recognize new classes while retaining its ability to recognize old ones. This is achieved by storing examples of each class, which are selected based on their closeness to the mean feature of that class. 
 The model is then trained on both the new data and these examples. This approach ensures that the model does not forget the old classes when learning new ones. 
 
-\begin{figure}[H]
-    \centering
-    \textwidth\textwidth]\includegraphics[width=0.5\textwidth]{Images//class_incremental_learning.png}
+\begin{wrapfigure}{l}{0.40\textwidth}\includegraphics[width=0.45\textwidth]{Images//class_incremental_learning.png}
     \caption{Class-incremental learning. \citep{rebuffi2017icarl}}
     \label{fig:icarl}
-\end{figure}
+\end{wrapfigure}
 
-iCaRL utilizes a \acrshort{cnn} as its underlying mechanism. The \acrshort{cnn} functions as a feature extractor that can be trained, denoted as $\phi: X \rightarrow \mathbf{R}^{d}$, followed by a single classification layer containing sigmoid output nodes equal to the number of classes encountered up to that point. All feature vectors undergo $L^{2}$ normalization. The classification approach employed by iCaRL is based on a nearest-mean-of-exemplars strategy. In order to predict a label, $y^{*}$, for a new input, $x$, the system calculates a prototype vector for each class seen so far, represented as $\mu_{1}, ..., \mu_{t}$, where $\mu_{y}$ represents the average feature vector of all examples belonging to class $y$. It also computes the feature vector of the image that should be classified and assigns the class label with the most similar prototype: 
+
+iCaRL utilizes a \acrshort{cnn} as its underlying mechanism. The \acrshort{cnn} functions as a feature extractor that can be trained, denoted as $\phi: X \rightarrow \mathbf{R}^{d}$, followed by a single classification layer containing sigmoid output nodes equal to the number of classes encountered up to that point. All feature vectors undergo $L^{2}$ normalization. The classification approach employed by iCaRL is based on a nearest-mean-of-exemplars strategy.\\
+In order to predict a label, $y^{*}$, for a new input, $x$, the system calculates a prototype vector for each class seen so far, represented as $\mu_{1}, ..., \mu_{t}$, where $\mu_{y}$ represents the average feature vector of all examples belonging to class $y$. It also computes the feature vector of the image that should be classified and assigns the class label with the most similar prototype: 
 \[
 y^{*} = \underset{y=1,...,t}{\mathrm{argmin }} \| \phi(x) - \mu_{y} \|
 \]
 
 \subsubsection{SCR}
 \label{sec:SCR}
-\begin{wrapfigure}{r}{0.48\textwidth}
-    \includegraphics[width=0.46\textwidth]{Images/scr_architecture.png}
+\begin{wrapfigure}{r}{0.40\textwidth}
+    \includegraphics[width=0.40\textwidth]{Images/scr_architecture.png}
     \caption{A schematic view of SCR. \citep{mai2021supervised}}
     \label{fig:scr_architecture}
 \end{wrapfigure}
 
 \acrfull{scr} is a technique introduced by \citep{mai2021supervised} to address some challenges common in \acrshort{cl}. 
-Because the softmax classifier is not the best choice for CL approaches, it aims to leverage the \acrfull{ncm} classifier instead to effectively mitigate catastrophic forgetting (or also called task-recency bias). 
-The \acrshort{scr} process (see Figure \ref{fig:scr_architecture}) involves the creation of an input batch during training by combining a minibatch $B_{n}$ from the datastream with another minibatch $B_{M}$ from the memory buffer $M_{i}$. These input batches, along with their augmented views, are encoded by a shared encoder ($Enc(\cdot)$) and projection head ($Proj(\cdot)$). Followed by an evaluation using supervised contrastive loss. In the testing phase, $Proj(\cdot)$ is removed.
-
-
-Supervised Contrastive Loss is an alternative loss function to cross entropy that can leverage label information more effectively. \citep{khosla2020supervised}.
+Because the softmax classifier is not the best choice for CL approaches, it aims to leverage the \acrfull{ncm} classifier instead to effectively mitigate catastrophic forgetting (or also called task-recency bias).\\
+The \acrshort{scr} process (see Figure \ref{fig:scr_architecture}) involves the creation of an input batch during training by combining a minibatch $B_{n}$ from the datastream with another minibatch $B_{M}$ from the memory buffer $M_{i}$.\\ 
+These input batches, along with their augmented views, are encoded by a shared encoder  and projection head. Followed by an evaluation using supervised contrastive loss. In the testing phase, the projection head is removed. Supervised Contrastive Loss is an alternative loss function to cross entropy that can leverage label information more effectively. \citep{khosla2020supervised}.
 
 \subsubsection{DER and DER++}
-\acrfull{der} 
+\acrfull{der} is proposed by \citep{buzzega2020dark} as an improvement on Experience Replay (ER) while maintaining a simple formulation. It relies on dark knowledge for distilling past experiences, sampled over the training trajectory. \\
+Formally, given a \acrshort{cl} classification split in $T$ tasks
+
+It is problematic that the data from earlier tasks $\mathbf{D}_{t}$ for $t \in \{ 1, \dots, t_{c} - 1 \}$ is unavailable. To preserve the knowledge acquired previously, the subsequent objective function, which mirrors the teacher-student method, is minimized:
+
+\[
+\mathbf{L}_{t_{c}} + \alpha \sum_{t=1}^{t_{c}-1} \EX \left[ D_{KL} \left( f_{\theta_{t}^{*}}(x) \parallel f_{\theta}(x) \right) \right]
+\]
+where $\theta_{t}^{*}$ is the optimal set of parameters at the end of task $t$, $\alpha$ is a hyperparameter balancing the trade-off between the terms. 
+$D_{KL}$ stands for the Kullback-Leibler divergence, a measure of how one probability distribution diverges from a second, expected probability distribution. It is commonly used to quantify how much knowledge from previous tasks is retained or lost when learning new tasks \citep{goodfellow2016deep}.\\
+The above objective function requires having access to $\mathbf{D}_{t}$ for earlier tasks. To address this issue, a replay buffer $M_{t}$ is utilized to store previous experiences related to task $t$. Instead of preserving the actual labels $y$, the network logits (pre-activation outputs) $z \doteq h_{\theta_{t}}(x)$ are maintained. 
+\[
+\mathbf{L}_{t_{c}} + \alpha \sum_{t=1}^{t_{c}-1} \EX \left[ D_{KL} \left( \sigma(z) \parallel f_{\theta}(x) \right) \right]
+\]
+where $\sigma$ is the softmax function and $(x,z)$ are drawn from the replay buffer $M_{t}$. \\
+\acrshort{der} uses reservoir sampling as defined by \citep{vitter1985random} to select $|M|$ random samples from the input stream, this way guaranteeing the same probability of being stored in the buffer without knowing the length in advance. This way the previous equation (with $\EX$ drawn from $M$) becomes:
+\[
+\mathbf{L}_{t_{c}} + \alpha \EX \left[ D_{KL} \left( \sigma(z) \parallel f_{\theta}(x) \right) \right]
+\]
+
+Given some basic assumptions, as mentioned in \citep{hinton2015distilling}, maximizing the KL divergence corresponds to minimizing the Euclidean distance among the logits. Consequently, the target function for \acrshort{der} is defined as
+\[
+\mathbf{L}_{t_{c}} + \alpha \EX \left[ \| z - h_{\theta}(x) \|^{2}_{2} \right]
+\]
+
+with $\EX$ being approximated by gradient computation on batches sampled from the replay buffer \citep{buzzega2020dark, boschini2022class}. \\
+\acrshort{der++} adjusts the objective function by adding an additional balancing term $\beta$ on alternative 'buffer' data points
+
+\[
+\mathbf{L}_{t_{c}} + \alpha \EX \left[ \| z_{1} - h_{\theta}(x_{1}) \|^{2}_{2} \right] + \beta \EX \left[ \mathbf{L} \left( y_{2}, f_{\theta}(x_{2}) \right) \right]
+\]
+
+\acrshort{der++} collapses to \acrshort{der} when the coefficient $\beta=0$. \\
+Experiment results, as described in \citep{buzzega2020dark} conclude that \acrshort{der} converges to more flat minima and to more calibrated networks. 
 
 \subsection{CL metrics}
 \label{sec:il_metrics}

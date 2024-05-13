@@ -108,6 +108,14 @@ The full PyTorch implementation can be found in Appendix \ref{appendix3}, in sho
 
 The train dataset contains a balanced (896 entries for each of the three glitch categories) selection of 2688 records where each record contains fractal dimension calculations on 50 auxiliary channels from 3 glitch classes ('Whistle', 'Tomte', 'Scattered\_Light'). Each channel has 56 fractal dimension calculations. The dataset selection is based on the study by \citep{laguarta2023detection}.
 
+An example visualisation is show in Figure \ref{fig:FD_visualisation}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Grad Assignment/Images/FD_visualisation_50channels.png}
+    \caption{Example visualisations of FD matrices with 50 channels. Left = 'Whistle', Middle = 'Tomte' and right = 'Scattered\_Light'}
+    \label{fig:FD_visualisation}
+\end{figure}
+
 The optimizer for the majority of experiments is the \verb|AdamW| optimizer. The learning rate is set to 0.001 and weight decay to 0.00001. Finally, the criterion used for the experiments is CrossEntropyLoss just as in \ref{subsubsec:RQ1_naive_baseline}. 
 \newpage
 \section{Results}

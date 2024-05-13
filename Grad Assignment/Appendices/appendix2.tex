@@ -1,0 +1,41 @@
+\chapter{MultiViewGravitySpyDataset DataLoader}
+\label{appendix2}
+\begin{verbatim}
+class MultiViewGravitySpyDataset(ImageFolder):
+    def __init__(self, root, cls, transform=None):
+        self.data_dir = root
+        self.classes = cls
+        self.class_to_indx = {c: i for i, c in enumerate(self.classes)}
+        self.image_paths = []
+        self.labels = []
+        self.versions = ["0.5.png", "1.0.png", "2.0.png", "4.0.png"]
+        for class_name in self.classes:
+            class_path = os.path.join(root, class_name)
+            for filename in os.listdir(class_path):
+              if any(filename.endswith(version) for version in self.versions):
+                self.image_paths.append(os.path.join(class_path, filename))
+                self.labels.append(self.class_to_indx[class_name])
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.image_paths) // 4  # Assuming 4 versions for each image
+
+    def __getitem__(self, idx):
+        image_paths = self.image_paths[idx*4: (idx+1)*4]  
+        images = [Image.open(image_path).convert('RGB') for image_path 
+        in image_paths]
+        if self.transform:
+            images = [self.transform(img) for img in images]
+        top_row = Image.fromarray(np.concatenate([np.array(images[0]), 
+        np.array(images[1])], axis=1))
+        bottom_row = Image.fromarray(np.concatenate([np.array(images[2]), 
+        np.array(images[3])], axis=1))
+        final_image = Image.fromarray(np.concatenate([np.array(top_row), 
+        np.array(bottom_row)], axis=0))
+        temp = np.array(final_image) 
+        temp = temp.astype(np.float32)
+        temp /= 255.0
+        fused_image = torch.from_numpy(temp.transpose((2, 0, 1)))
+        label = self.labels[idx*4] 
+        return fused_image, label
+\end{verbatim}

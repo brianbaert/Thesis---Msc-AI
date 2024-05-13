@@ -1,0 +1,128 @@
+\documentclass{ou-report}
+
+\citestyle{agu}
+\usepackage{float}
+
+% Dit template is gemaakt door P.J. Molijn in het kader van zijn afstuderen aan de OU in 2014.
+% Waarvoor hartelijk dank.
+% Minieme maar belangrijke wijzigingen zijn aangebracht door E.M. van Doorn
+% Het template is versimpeld door Sylvia Stuurman, 2019.
+
+\makenoidxglossaries
+
+\newacronym{gw}{GW}{Gravitational Waves}
+\newacronym{bbh}{BBH}{Binary Black Hole}
+\newacronym{ns}{NS}{Neutron Star}
+\newacronym{bns}{BNS}{Binary Neutron Star}
+\newacronym{cbc}{CBC}{Compact Binary Coalescence}
+\newacronym{ligo}{LIGO}{Laser Interferometer Gravitational-wave observatory}
+\newacronym{o1}{O1}{First observing run}
+\newacronym{o2}{O2}{Second observing run}
+\newacronym{o3}{O3}{Third observing run}
+\newacronym{nsbh}{NSBH}{Neutron Star-Black Hole}
+\newacronym{ccsne}{CCSNe}{Core-Collapse Supernovae}
+\newacronym{dl}{DL}{Deep Learning}
+\newacronym{ml}{ML}{Machine Learning}
+\newacronym{ai}{AI}{Artificial Intelligence}
+\newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{fd}{FD}{Fractal Dimension}
+\newacronym{idq}{iDQ}{inferential Data Quality}
+\newacronym{pca}{PCA}{Principal Component Analysis}
+\newacronym{svm}{SVM}{Support Vector Machine}
+\newacronym{lr}{LR}{Logistic Regression}
+\newacronym{xgb}{XGBoost}{Extreme Gradient Boosting}
+\newacronym{gwosc}{GWOSC}{Gravitational-wave Open Science Center}
+\newacronym{snr}{SNR}{Signal-to-Noise Ratio}
+\newacronym{od}{OD}{Object Detection}
+\newacronym{yolo}{YOLO}{You Only Look Once}
+\newacronym{map}{mAP}{mean Average Precision}
+\newacronym{var}{VAR}{Variation method}
+\newacronym{anam}{ANAM}{Averaged Normalized Autocorrelation Method}
+\newacronym{il}{IL}{Incremental Learning}
+\newacronym{xdg}{XdG}{Context-dependent Gating}
+\newacronym{ewc}{EWC}{Elastic Weight Consolidation}
+\newacronym{si}{SI}{Synaptic Intelligence}
+\newacronym{lwf}{LwF}{Learning without Forgetting}
+\newacronym{fromp}{FROMP}{Functional Regularization Of the Memorable Past}
+\newacronym{dgr}{DGR}{Deep Generative Replay}
+\newacronym{bir}{BI-R}{Brain-Inspired Replay}
+\newacronym{er}{ER}{Experience Replay}
+\newacronym{agem}{A-GEM}{Averaged Gradient Episodic Memory}
+\newacronym{gem}{GEM}{Gradient Episodic Memory}
+\newacronym{cl}{CL}{Continual Learning}
+\newacronym{sgd}{SGD}{Stochastic Gradient Descent}
+\newacronym{scr}{SCR}{Supervised Contrastive Replay}
+\newacronym{ncm}{NCM}{Nearest-Class-Mean}
+\newacronym{der}{DER}{Dark Experience Replay}
+\newacronym{der++}{DER++}{Dark Experience Replay ++}
+\newacronym{umap}{UMAP}{Uniform Manifold Approximation and Projection}
+\newacronym{tsne}{t-SNE}{t-Distributed Stochastic Neighbor Embedding}
+
+\begin{document}
+\pagestyle{plain}
+\title{Enhancing Glitch Identification in Gravitational Wave Analysis: A Continual Learning Approach}
+\author{Brian Baert}
+
+\input{title}
+\clearpage
+\printglossary[type=\acronymtype]
+\printnoidxglossaries
+\clearpage
+
+\pagenumbering{roman}
+
+\frontmatter 
+
+
+\let\cleardoublepage\clearpage
+
+% Optional Dedication, Acknowledgement
+%\input{dedication}
+
+%\input{acknowledgement}
+\tableofcontents
+
+%Optional: list of figures, list of tables
+%\listoffigures
+
+%\listoftables
+
+%% Include an optional summary page.
+%\input{Summary/summary}
+%\input{Summary/samenvatting}
+
+\mainmatter
+\pagenumbering{arabic}
+
+\input{Chapter1/chapter1}
+
+\input{Chapter2/chapter2}
+
+\input{Chapter3/chapter3}
+
+\input{Chapter4/chapter4}
+
+%\input{Chapter5/chapter-5}
+
+%\input{Chapter6/chapter-6}
+
+
+
+\backmatter
+\pagenumbering{roman}
+
+\bibliographystyle{plainnat}
+\bibliography{report}
+
+%% Use letters for the chapter numbers of the appendices.
+%\appendix
+\appendix
+  \input{Appendices/appendix1}
+  \input{Appendices/appendix2}
+  \input{Appendices/appendix3}
+  \input{Appendices/appendix4}
+%  \input{Appendices/appendix-b}
+%  \input{Appendices/appendix-c}
+
+
+\end{document}

@@ -7,7 +7,7 @@ The upcoming research will investigate the following questions:
 \begin{mdframed}[backgroundcolor=lightgray!20]
 \par RQ1: Do classes learned from a continual learning approach align with existing gravity spy classes?\\
 RQ2: How effective are continual learning approaches when incorporating auxiliary channel data for detecting and classifying glitch morphologies?\\
-RQ3: What are the main challenges in implementing continual learning strategies and how are they mitigated? 
+RQ3: What if strain data (spectrograms) are combined with auxiliary channel data in a multimodal approach? Does this learn a robust classification?
 \end{mdframed}
 
 \subsection{Research method}
@@ -23,12 +23,13 @@ In order to evaluate the alignment between classes acquired from a \acrlong{cl} 
 In order to assess how well auxiliary channel-based strategies work for detecting and categorizing glitch shapes, we will utilize the following approach:
 \begin{itemize}
     \item The dataset preparation will be done by gathering glitch-affected and clean signal samples. Useful information needs to be extracted from a selection of auxiliary channels in a limited time window around glitch transients. The approach of \citep{colgan2020efficient} will be used. 
-    \item A multimodal fusion achitecture will be used to incorporate auxiliary channel data alongside the primary spectrogram dataset (main signal information). The model is trained on the selected dataset to learn robust glitch detection and classification. 
+    \item A Convolutional-based architecture will be used, together with the same selection of \acrshort{cl} algorithms, used in RQ1. 
     \item Evaluating the model's performance is done by using metrics like precision, recall and F1-score. Additionally visualization techniques can be employed to understand the relative feature importance of selected auxiliary channels for glitch classification. 
 \end{itemize}
 \subsubsection{RQ3}
 To investigate the main challenges in implementing \acrfull{cl} and explore mitigation strategies, we will take a two-pronged approach: 
 \begin{itemize}
-    \item We conduct a comprehenisve review of existing literature on \acrshort{cl} algorithms and their limitations. This helps to identify recurring challenges, such as catastrophic forgetting and resource constraints. 
-    \item We might conduct controlled experiments with different \acrshort{cl} algorithms on computer vision benchmark datasets like Split MNIST/CIFAR, CORe50, ImageNet-Incremental \citep{wu2019large} or NLP datasets like WikiText-103 \citep{wang2021wikigraphs}, SentiWordNet \citep{das2010sentiwordnet}.
+    \item The dataset used in RQ2, together with the spectrograms provided by Melissa Lopez, will be used. 
+    \item A multimodal fusion architecture will be used to incorporate auxiliary channel data alongside the spectrogram dataset. The model will be trained to learn robust glitch detection and classification. 
+    \item Evaluating the model's performance is done by using metrics like precision, recall and F1-score. Additional visualization techniques such as \acrshort{tsne}, \acrshort{umap} and Saliency mapping will be used. 
 \end{itemize}

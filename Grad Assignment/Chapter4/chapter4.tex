@@ -59,7 +59,7 @@ The \verb|MultiViewColorNet_resnet18| architecture is a PyTorch model extending 
 The full PyTorch implementation can be found in Appendix \ref{appendix1}, in short the implementation consists of:
 \begin{itemize}
     \item A pre-trained ResNet-18 model is loaded into \verb|self.resnet|. The weights are set to 'DEFAULT' (pre-trained on ImageNet). 
-    \item The kernel size of the first convolutional layer in the ResNet model is modified to (7,7), this is necessary for coping with the 448 by 448 RGB fused image. 
+    \item The kernel size of the first convolutional layer in the ResNet model adapted to (7x7), this is a common practice in ResNet-based architectures \citep{tomen2021spectral} and has been succesfull in medical image classification on imbalanced datasets \citep{mursalim2021multi}.
     \item All parameters in the ResNet model are unfrozen, allowing them to be updated during training. 
     \item The last layer of the ResNet model, a fully connected layer, is replaced with a new linear layer that has 120 output features. 
     \item Two additional fully connected layers (\verb|self.fc2| and \verb|self.fc3|) are added, with the final layer outputting a number of features equal to \verb|num_classes|.
@@ -121,7 +121,7 @@ The optimizer for the majority of experiments is the \verb|AdamW| optimizer. The
 \section{Results}
 \subsection{RQ1}
 \label{subsec:RQ1}
-Eeach of the strategies are trained for 100 epochs on every task (of distinguishing between two glitch categories). The order in which the classes are fed is kept the same over all strategies (1 = \{Koi\_Fish; Low\_Frequency\_Burst\}, 2 = \{ Tomte; Extremely\_Loud \}, 3 = \{ Whistle; Fast\_Scattering \}, 4 = \{ Blip\_Low\_Frequency ; Scattered\_Light \} and 5 = \{ Blip; Fast\_Scattering \} )
+Each of the strategies are trained for 100 epochs on every task (of distinguishing between two glitch categories). The order in which the classes are fed is kept the same over all strategies (1 = \{Koi\_Fish; Low\_Frequency\_Burst\}, 2 = \{ Tomte; Extremely\_Loud \}, 3 = \{ Whistle; Fast\_Scattering \}, 4 = \{ Blip\_Low\_Frequency ; Scattered\_Light \} and 5 = \{ Blip; Fast\_Scattering \} )
 
 \subsubsection{Naive CL strategy (baseline)}
 \label{subsubsec:RQ1_naive_baseline}
@@ -152,12 +152,12 @@ From the Confusion Matrix as shown in Figure \ref{fig:cm_f1_naive_baseline}-(a) 
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Grad Assignment/Images/cm_MultiView_Naive_100epochs.png}  
-  \label{fig:sub-first}
+  \label{fig:sub-first1}
 \end{subfigure}
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Grad Assignment/Images/f1_MultiView_Naive_100epochs.png}  
-  \label{fig:sub-second}
+  \label{fig:sub-second1}
 \end{subfigure}
 \caption{Confusion matrix and f1 plot for Naive baseline}
 \label{fig:cm_f1_naive_baseline}
@@ -197,17 +197,17 @@ Because 'Blip' is provided in the last experience, the recency bias favors this 
 \newpage
 \subsubsection{LwF strategy}
 \label{subsubsec:RQ1_LWF}
-A first \acrshort{cl} strategy addressing catastrophic forgetting is called \acrfull{lwf}. The model is trained, just as in the naive baseline, on five distinct tasks containing two classes per experience. 
+A first \acrshort{cl} strategy addressing catastrophic forgetting is called \acrfull{lwf}. The model is trained, just as in the naive baseline, on five distinct tasks that contain two classes per experience. 
 The hyperparameter choices are: 
 \begin{itemize}
     \item \verb|alpha=0.25|: $\alpha$ controls the balance between the loss on the new task and the distillation loss used to retain knowledge from old tasks. A value of 0.25 is a common choice based on the paper by \citep{oren2021defense}. 
-    \item \verb|temperature=2.0|: $\tau$ controls the "softness" of the logits during knowledge distillation. A higher $\tau$ leads to softer targets, encouraging the network to learn a more generalizable presentation that benefits both old and new tasks. 
+    \item \verb|temperature=2.0|: $\tau$ controls the "softness" of the logits during knowledge distillation. A higher $\tau$ leads to softer targets, encouraging the network to learn a more generalizable representation that benefits both old and new tasks. 
 \end{itemize}
 
 The strategy is augmented with the same \verb|ReplayPlugin|. 
 Early stopping is not inherently supported by \acrshort{lwf} and thus not applied. 
 
-The weight distribution changes are tracked as well. A similar behavior can be found. For illustrative purposes we only show the violin plots after the first and the last experience. 
+Changes in weight distribution are also tracked. A similar behavior can be found. For illustrative purposes we only show the violin plots after the first and the last experience. 
 
 \begin{figure}[ht]
 \centering
@@ -232,12 +232,12 @@ From the Confusion Matrix, f1 plot and Classification report as shown in Figure 
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Images/cm_LwF_MultiView_100epochs.png}  
-  \label{fig:sub-first}
+  \label{fig:sub-first2}
 \end{subfigure}
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Images/f1_LwF_MultiView_100epochs.png}  
-  \label{fig:sub-second}
+  \label{fig:sub-second2}
 \end{subfigure}
 \caption{Confusion matrix and f1 plot for LwF strategy}
 \label{fig:cm_f1_lwf_baseline}
@@ -265,7 +265,7 @@ From the Confusion Matrix, f1 plot and Classification report as shown in Figure 
 \end{table}
 
 
-Due to these findings, further exploration of the embedding using \acrshort{tsne} and \acrshort{umap} plots (in two dimensions) is necessary.\\ The \acrshort{tsne} and \acrshort{umap} representation, as shown in Figure \ref{fig:tSNE_LwF}, demonstrate a clustering of glitch categories in 2D space.
+Due to these findings, further exploration of the embedding using \acrshort{tsne} and \acrshort{umap} plots (in two dimensions) is necessary.\\ The \acrshort{tsne} and \acrshort{umap} representation, as shown in Figure \ref{fig:tSNE_LwF}, shows a clustering of glitch categories in 2D space.
 
 
 \begin{figure}[ht]
@@ -340,12 +340,12 @@ From the Confusion Matrix, f1 plot and Classification report as shown in Figure 
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Images/cm_AGEM_MultiView_100epochs.png}  
-  \label{fig:sub-first}
+  \label{fig:sub-first3}
 \end{subfigure}
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Grad Assignment/Images/f1_AGEM_MultiView_100epochs.png}  
-  \label{fig:sub-second}
+  \label{fig:sub-second3}
 \end{subfigure}
 \caption{Confusion matrix and f1 plot for AGEM strategy}
 \label{fig:cm_f1_agem_baseline}
@@ -403,12 +403,12 @@ The strategy is augmented with the \verb|ReplayPlugin| used in the previous stra
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Images/cm_EWC_MultiView_100epochs.png}  
-  \label{fig:sub-first}
+  \label{fig:sub-first4}
 \end{subfigure}
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Images/f1_EWC_MultiView_100epochs.png}  
-  \label{fig:sub-second}
+  \label{fig:sub-second4}
 \end{subfigure}
 \caption{Confusion matrix and f1 plot for EWC strategy}
 \label{fig:cm_f1_ewc_baseline}
@@ -448,12 +448,12 @@ The hyperparameter \verb|alpha| controls the weight given to the replay loss (fr
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Images/cm_DER_MultiView_100epochs.png}  
-  \label{fig:sub-first}
+  \label{fig:sub-first5}
 \end{subfigure}
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Images/f1_DER_MultiView_100epochs.png}  
-  \label{fig:sub-second}
+  \label{fig:sub-second5}
 \end{subfigure}
 \caption{Confusion matrix and f1 plot for DER strategy}
 \label{fig:cm_f1_der_baseline}
@@ -523,12 +523,12 @@ The images of the Saliency Mapping in Figure \ref{fig:saliency_der} visualise th
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Images/cm_DER++_MultiView_100epochs.png}  
-  \label{fig:sub-first}
+  \label{fig:sub-first6}
 \end{subfigure}
 \begin{subfigure}
   \centering
   \includegraphics[width=0.49\textwidth]{Images/f1_DER++_MultiView_100epochs.png}  
-  \label{fig:sub-second}
+  \label{fig:sub-second6}
 \end{subfigure}
 \caption{Confusion matrix and f1 plot for DER++ strategy}
 \label{fig:cm_f1_der++_baseline}
@@ -554,19 +554,57 @@ The images of the Saliency Mapping in Figure \ref{fig:saliency_der} visualise th
     \label{tbl:RQ1_class_report_der++}
 \end{table}
 
-From the Confusion Matrix, f1 plot and Classification report as shown in Figure \ref{fig:cm_f1_der++_baseline} and Table \ref{tbl:RQ1_class_report_der++} we find that the overall accuracy is $91\%$, one percent point less than the previous best \acrshort{der} strategy from \ref{subsubsec:RQ1_DER}. It has perfect results on 'Whistle' glitches. \\
+From the Confusion Matrix, f1 plot and Classification report as shown in Figure \ref{fig:cm_f1_der++_baseline} and Table \ref{tbl:RQ1_class_report_der++} we find that the overall accuracy is $91\%$, one percent point less than the previous best \acrshort{der} strategy from \ref{subsubsec:RQ1_DER}. It has perfect results on 'Whistle' and 'Low\_Frequency\_Lines' glitches. \\
 
 \newpage
 \subsubsection{SCR strategy}
 As described in \ref{sec:SCR}, \acrshort{scr} leverages the Nearest-Class-Mean classifier as a substitute for the Softmax classifier by addressing recency bias and avoiding structural changes in the fully-connected layer for new classes. There is however a risk involved, the effectiveness of \acrshort{scr} might depend on the quality of the data embeddings and the between-class separation. It also has the tendency of introducing additional bias \citep{mai2021supervised, aleixo2023catastrophic}.   
 
+\begin{figure}[H]
+\centering
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.49\textwidth]{Images/cm_SCR_MultiView_50epochs.png}  
+  \label{fig:sub-first7}
+\end{subfigure}
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.49\textwidth]{Images/f1_SCR_MultiView_50epochs.png}  
+  \label{fig:sub-second7}
+\end{subfigure}
+\caption{Confusion matrix and f1 plot for SCR strategy}
+\label{fig:cm_f1_scr_baseline}
+\end{figure}
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Precision} & \textbf{Recall} & \textbf{f1-score} \\ \hline
+    Blip & $0.64$ & $0.80$ & $0.71$ \\
+    Blip\_Low\_Frequency & $0.78$ & $0.82$ & $0.80$\\
+    Extremely\_Loud & $0.96$ & $0.88$ &  $0.91$\\
+    Fast\_Scattering & $0.92$ & $0.92$ &  $0.92$\\
+    Koi\_Fish & $0.79$ & $0.98$ & $0.87$\\
+    Low\_Frequency\_Burst & $0.96$ & $0.88$ & $0.91$\\
+    Low\_Frequency\_Lines & $0.97$ & $0.78$ & $0.86$\\
+    Scattered\_Light & $0.79$ & $1.00$ & $0.88$ \\
+    Tomte & $0.86$ & $0.51$ & $0.64$ \\
+    Whistle & $1.00$ & $0.98$ & $0.99$ \\
+    \hline
+    \end{tabular}
+    \caption{Classification report of the SCR strategy.}
+    \label{tbl:RQ1_class_report_scr}
+\end{table}
 
+From the Confusion Matrix, f1 plot and Classification report as shown in Figure \ref{fig:cm_f1_scr_baseline} and Table \ref{tbl:RQ1_class_report_scr} we find that the overall accuracy is $85\%$, worse than the best performing \acrshort{der} strategy from \ref{subsubsec:RQ1_DER}. It has good results on 'Whistle' and Fast\_Scattering' glitches. But fails greatly on 'Tomte' and 'Blip' glitches.
+The training time of the implementation used in the \verb|Avalanche| package\footnote{avalanche.training.SCR at  \url{https://shorturl.at/ewOU3}} takes very long, almost three times (2.5 days) longer than \ref{subsubsec:RQ1_DER}. 
 
 \subsection{RQ2}
 \label{subsec:RQ2}
 Each of the strategies are trained for 15 epochs on every task (of learning the weights on the three classes). More training epochs resulted in overfitting behavior. Between 10 and 15 epochs of training the results converge. The order in which the classes are fed is kept the same over all strategies (1 = \{Whistle\}, 2 = \{Scattered\_Light \}, 3 = \{Tomte \}).
 
 \subsubsection{Naive CL strategy (baseline)}
+\label{subsubsec:RQ2_naive}
 As baseline we use the \acrshort{cl} stategy 'Naive', the hyperparameter choices and additional plugins are similar to those in \ref{subsubsec:RQ1_naive_baseline}. One difference, the benchmark consists of 3 experiences where each experience contains instances of 1 class only. 
 During training we track the weight distribution changes via violin distribution plots. In the following table, \ref{tbl:naive_fd_weights}, the violin plots for the second and last experience are shown.
 After the first 15 epochs training on differentiating the classes from experience 0 to 2 we get: 
@@ -576,10 +614,10 @@ After the first 15 epochs training on differentiating the classes from experienc
 \end{tabular}
 \label{tbl:naive_fd_weights}
 \end{center}
+The model has an overall accuracy of $94 \%$ and a Backward Transfer (BWT) metric of $0.0523$, indicating that the model was successful in mitigating forgetting on the old task while the model learned the new task. A similar conclusion can be made from the Confusion matrix in Figure \ref{fig:cm_f1_FD_naive_baseline} and classification report. 
+The model performs well on the 'Whistle' and 'Scattered\_Light' class, but struggles some more with 'Tomte'. The F1 scores for two of the classes 'Whistle' and 'Scattered\_Light' are above 0.9, the lowest being the 'Tomte' result with F1$=0.89$, scores above 0.9 are considered very good. 
 
-From the Confusion Matrix as shown in Figure \ref{fig:cm_f1_FD_naive_baseline}-(a) we find that the overall accuracy is $92,56 \%$. The model performs well on the 'Whistle' and 'Scattered\_Light' class, but struggles some more with 'Tomte'. The F1 scores for all of the classes are above 0.9, the lowest being the 'Tomte' result with $f1=0.90$, scores above 0.9 are considered very good. 
-
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
 \begin{subfigure}
   \centering
@@ -595,23 +633,193 @@ From the Confusion Matrix as shown in Figure \ref{fig:cm_f1_FD_naive_baseline}-(
 \label{fig:cm_f1_FD_naive_baseline}
 \end{figure}
 
-Just as in our experiments for \ref{subsec:RQ1} we investigate the \acrshort{tsne} and \acrshort{umap} representations. 
-The t-SNE visualization as shown in Figure \ref{fig:tSNE_FD_Naive} illustrates the clustering of three glitch classes in 2D space. The three classes appear to be well-separated in the plot, which suggests that the model is able to effetively distinguish between these types of glitches. The density of the point clouds indicates the data samples within a class are very similar to eachother. There is, however, some overlap between 'Tomte' and the two other classes.\\
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Precision} & \textbf{Recall} & \textbf{f1-score} \\ \hline
+    Whistle & $0.92$ & $0.91$ & $0.92$ \\
+    Tomte & $0.87$ & $0.92$ & $0.89$ \\
+    Scattered\_Light & $0.98$ & $0.95$ & $0.96$ \\
+    \hline
+    \end{tabular}
+    \caption{Classification report of the FD Naive strategy.}
+    \label{tbl:RQ2_class_report_FD_Naive}
+\end{table}
 
-A similar interpretation can be made from Figure \ref{fig:umap_FD_Naive}. The 'Whistle' class forms a distinct elongated cluster. This suggests that the instances are relatively similar to eachother in the high-dimensional space. The 'Tomte' cluster is a compact group, but relatively close to other clusters. It is evident that there is overlap among different classes. This raises the concern whether some instances might have been incorrectly classified during manual labeling. 
+Just as in our experiments for \ref{subsec:RQ1} we investigate the \acrshort{tsne} and \acrshort{umap} representations. 
+As depicted in Figure \ref{fig:tSNE_FD_Naive}, the t-SNE visualization demonstrates the clustering of three glitch classes in a 2D layout. The plot shows clear separation among the three classes, implying that the model successfully differentiates these glitch types. The compactness of the point clouds within each class suggests high similarity among the data samples of a class. Nonetheless, there is some intersection involving the 'Tomte' class and the other two classes.\\
+
+A similar interpretation can be made from Figure \ref{fig:umap_FD_Naive}. The 'Whistle' class forms a distinct elongated cluster. This indicates that the instances are quite alike in the high-dimensional space. The 'Tomte' cluster appears as a dense group, yet it is proximate to other clusters. It is evident that there is overlap among different classes. This raises the concern whether some instances might have been incorrectly classified during manual labeling. 
 
 \begin{figure}[ht]
 \centering
 \begin{subfigure}
   \centering
-    \includegraphics[width=0.6\textwidth]{Grad Assignment/Images/tSNE_FractalDimension_naive_test.png}
+    \includegraphics[width=0.7\textwidth]{Grad Assignment/Images/tSNE_FractalDimension_naive_test.png}
     \caption{t-SNE visualization Naive FD strategy}
     \label{fig:tSNE_FD_Naive}
 \end{subfigure}
 \begin{subfigure}
   \centering
-    \includegraphics[width=0.6\textwidth]{Grad Assignment/Images/umap_FractalDimension_naive_test.png}
+    \includegraphics[width=0.7\textwidth]{Grad Assignment/Images/umap_FractalDimension_naive_test.png}
     \caption{UMAP visualization Naive FD strategy}
     \label{fig:umap_FD_Naive}
 \end{subfigure}
 \end{figure}
+
+\subsubsection{LwF strategy}
+\label{subsubsec:RQ2_lwf}
+The strategy is implemented with the same hyperparameter choices as described in \ref{subsubsec:RQ1_LWF}. The benchmark as described in \ref{subsubsec:RQ2_naive} is used. \\
+The trained model has an overall accuracy of $92\%$, less than the Naive baseline. The F1 scores (see Table \ref{tbl:RQ2_class_report_FD_LwF}) are all less than those of the Naive baseline. 
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{Images/cm_FD_model_LwF.png}  
+  \label{fig:fd_sub-first}
+\end{subfigure}
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.50\textwidth]{Images/f1_FD_model_LwF.png}  
+  \label{fig:fd_sub-second}
+\end{subfigure}
+\caption{Confusion matrix and f1 plot for LwF FD strategy}
+\label{fig:cm_f1_FD_LwF}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Precision} & \textbf{Recall} & \textbf{f1-score} \\ \hline
+    Whistle & $0.93$ & $0.91$ & $0.92$ \\
+    Tomte & $0.87$ & $0.92$ & $0.89$ \\
+    Scattered\_Light & $0.98$ & $0.95$ & $0.96$ \\
+    \hline
+    \end{tabular}
+    \caption{Classification report of the FD LwF strategy.}
+    \label{tbl:RQ2_class_report_FD_LwF}
+\end{table}
+
+The Backward Transfer (BWT) metric is $-0.0654$, suggesting the model had a slight decline in performance on the old task after learning the new task. However, the magnitude of forgetting is relatively small. \\
+
+\begin{figure}[ht]
+\centering
+\begin{subfigure}
+  \centering
+    \includegraphics[width=0.7\textwidth]{Images/tSNE_FractalDimension_LwF_test.png}
+    \caption{t-SNE visualization LwF FD strategy}
+    \label{fig:tSNE_FD_LwF}
+\end{subfigure}
+\begin{subfigure}
+  \centering
+    \includegraphics[width=0.7\textwidth]{Images/umap_FractalDimension_LwF_test.png}
+    \caption{UMAP visualization LwF FD strategy}
+    \label{fig:umap_FD_LwF}
+\end{subfigure}
+\end{figure}
+
+The 'Scattered\_Light' glitch category has the highest overall F1 score, and from the \acrshort{tsne} and \acrshort{umap} representations shown in Figure \ref{fig:tSNE_FD_LwF} and \ref{fig:umap_FD_LwF} it is clear that the cluster containing the 'Scattered\_Light' test instances is much more dense, as opposed to the 'Whistle' and 'Tomte' clusters showing quite some overlap. This indicates the model has more trouble distinguishing between those two categories. 
+
+\subsubsection{AGEM strategy}
+\label{subsubsec:RQ2_agem}
+The strategy is augmented, just as in \ref{subsubsec:RQ1_AGEM} with the \verb|ReplayPlugin|, and also an \verb|AGEMPlugin|. The \verb|AGEMPlugin| is set to accept \verb|patterns_per_experience=20|, based on the study by \citep{chaudhry2019continual}. 
+The \verb|sample_size| is set to the dataloader size as previously suggested. 
+The results, even after retraining with different memory size and patterns\_per\_experience, are very bad. \acrshort{agem} clearly suffers from catastrophic forgetting as depicted in Figure \ref{fig:cm_FD_agem} and it is impossible to plot the \acrshort{tsne} and \acrshort{umap} plots because of \verb|nan| values occurring in the loss calculation. 
+The model outputs the last encountered class 'Whistle' in all test cases. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Grad Assignment/Images/cm_FD_model_AGEM.png}
+    \caption{Confusion matrix for AGEM strategy}
+    \label{fig:cm_FD_agem}
+\end{figure}
+
+
+\subsubsection{EWC strategy}
+\label{subsubsec:RQ2_ewc}
+The strategy is implemented with the same hyperparameter choices as described in \ref{subsubsec:RQ1_EWC}. The benchmark as described in \ref{subsubsec:RQ2_naive} is used. \\
+The trained model has an overall accuracy of $90\%$, less than the Naive baseline. The F1 scores (see Table \ref{tbl:RQ2_class_report_FD_EWC}) are all less than those of the Naive baseline. 
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{Images/cm_FD_model_EWC.png}  
+  \label{fig:fd_sub-first}
+\end{subfigure}
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.50\textwidth]{Images/f1_FD_model_EWC.png}  
+  \label{fig:fd_sub-second}
+\end{subfigure}
+\caption{Confusion matrix and f1 plot for EWC FD strategy}
+\label{fig:cm_f1_FD_EWC}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Precision} & \textbf{Recall} & \textbf{f1-score} \\ \hline
+    Whistle & $0.89$ & $0.93$ & $0.91$ \\
+    Tomte & $0.85$ & $0.87$ & $0.86$ \\
+    Scattered\_Light & $0.97$ & $0.90$ & $0.94$ \\
+    \hline
+    \end{tabular}
+    \caption{Classification report of the FD EWC strategy.}
+    \label{tbl:RQ2_class_report_FD_EWC}
+\end{table}
+
+
+The Backward Transfer (BWT) metric is $-0.1176$, suggesting a moderate level of catastrophic forgetting on the previous experiences after learning the new experience.\\
+
+\subsubsection{DER strategy}
+\label{subsubsec:RQ2_der}
+
+The strategy is implemented with the same hyperparameter choices as described in \ref{subsubsec:RQ1_DER} with the benchmark as described in \ref{subsubsec:RQ2_naive}. \\
+The trained model has an overall accuracy of $90\%$, less than the Naive baseline. The F1 scores (see Table \ref{tbl:RQ2_class_report_FD_EWC}) are all less than those of the Naive baseline. 
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{Images/cm_FD_model_DER.png}  
+  \label{fig:fd_sub-first8}
+\end{subfigure}
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.50\textwidth]{Images/f1_FD_model_DER.png}  
+  \label{fig:fd_sub-second8}
+\end{subfigure}
+\caption{Confusion matrix and f1 plot for DER FD strategy}
+\label{fig:cm_f1_FD_DER}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Precision} & \textbf{Recall} & \textbf{f1-score} \\ \hline
+    Whistle & $0.89$ & $0.93$ & $0.91$ \\
+    Tomte & $0.85$ & $0.87$ & $0.86$ \\
+    Scattered\_Light & $0.97$ & $0.90$ & $0.94$ \\
+    \hline
+    \end{tabular}
+    \caption{Classification report of the FD DER strategy.}
+    \label{tbl:RQ2_class_report_FD_DER}
+\end{table}
+
+The Backward Transfer (BWT) metric is $0.0131$, indicating that the model was successful in mitigating forgetting on the old task while the model learned the new task. A BWT close to zero (ideal scenario) indicates that the model is able to maintain its performance on old tasks while learning new ones with no degradation in performance on old tasks.\\
+
+\subsubsection{DER++ strategy}
+\label{subsubsec:RQ2_der++}
+
+The Backward Transfer (BWT) metric is $-0.0458$, suggesting the model had a slight decline in performance on the old task after learning the new task. However, the magnitude of forgetting is relatively small. 
+
+
+\subsubsection{SCR strategy}
+\label{subsubsec:RQ2_scr}
+
+The Backward Transfer (BWT) metric is $0.3595$, a high value, suggesting that the model suffers from moderate catastrophic forgetting on the old task after learning the new task.  

@@ -49,6 +49,7 @@ Each channel is identified by a name following the format \verb|[IFO]:[SYSTEM]-[
 
 \section{Model}
 \subsection{Model design and parameter choices for RQ1}
+\label{model_RQ1}
 The \verb|MultiViewColorNet_resnet18| architecture is a PyTorch model extending the \newline \verb|nn.Module| class. It is designed for a multi-class classification task. 
 \begin{figure}[H]
     \centering
@@ -90,6 +91,7 @@ The optimizer for the majority of experiments is the \verb|AdamW| optimizer, a v
 The criterion used for the experiments is CrossEntropyLoss, a common choice for multi-class classification tasks. This loss function combines LogSoftmax\footnote{Applies the $\log (\text{Softmax} (x))$ function to an input Tensor. \citep{miranda2017softmax}} and NLLLoss\footnote{Negative Log Likelihood Loss \citep{miranda2017softmax}} in one single class, making it suitable for training a classification problem with more than 2 classes. 
 \newpage
 \subsection{Model design and parameter choices for RQ2}
+\label{model_rq2}
 The \verb|FractalDimensionConvNet| architecture is a PyTorch model extending the \newline \verb|nn.Module| class and uses a combination of convolutional layers, batch normalization, dropout and fully connected layers. It is designed for a multi-class classification task. 
 \begin{figure}[H]
     \centering
@@ -117,6 +119,22 @@ An example visualisation is show in Figure \ref{fig:FD_visualisation}
 \end{figure}
 
 The optimizer for the majority of experiments is the \verb|AdamW| optimizer. The learning rate is set to 0.001 and weight decay to 0.00001. Finally, the criterion used for the experiments is CrossEntropyLoss just as in \ref{subsubsec:RQ1_naive_baseline}. 
+\newpage
+\subsection{Model design and parameter choices for RQ3}
+\label{model_RQ3}
+The \verb|MultiModalNet| architecture is a PyTorch model extending the \newline \verb|nn.Module| class and uses a combination of the \verb|MultiViewColorNet| architecture of RQ1 \ref{model_RQ1} and the \verb|FractalDimensionConvNet| of RQ2 \ref{model_rq2}. 
+The outputs of both models are concatenated and send through a fully connected linear layer mapping the outputs to the final output classes. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Images/MultiModal_architecture.drawio.png}
+    \caption{MultiModalNet architecture}
+    \label{fig:MultiModal_architecture}
+\end{figure}
+
+The model uses the \verb|CrossEntropyLoss| function designed for multiclass classification and the \verb|AdamW| optimizer. The learning rate is set to the default value $0.001$ and weight decay to $0.00001$.
+
+Due to the fact that the \acrshort{cl} package \verb|Avalanche| \citep{lomonaco2021avalanche} does not provide native Multimodal support, the experimentation is limited to a basic Multimodal pytorch training loop. 
 \newpage
 \section{Results}
 \subsection{RQ1}
@@ -823,3 +841,33 @@ The Backward Transfer (BWT) metric is $-0.0458$, suggesting the model had a slig
 \label{subsubsec:RQ2_scr}
 
 The Backward Transfer (BWT) metric is $0.3595$, a high value, suggesting that the model suffers from moderate catastrophic forgetting on the old task after learning the new task.  
+
+\newpage
+
+\subsection{RQ3}
+The training is done on the dataset provided by Melissa Lopez, used in the research by \citep{laguarta2023detection, dooney2022dvgan, dooney2024cdvgan}. The training is done for 30 epochs on the classes \{Whistle, Scattered\_Light, Tomte\}. 
+
+The ultimate version of the model achieved a Cross Entropy Loss of $0.0122$ and a training accuracy of $99.61\%$. The outcomes detailed in \ref{tbl:RQ3_class_report_multimodal} for the unseen test samples were remarkably impressive, demonstrating flawless precision, recall, and f1-score across all three categories. Notably, the performance on the Tomte glitch significantly surpassed that of earlier 'best' models as discussed in \ref{subsubsec:RQ1_DER} and \ref{subsubsec:RQ2_naive}.
+
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Precision} & \textbf{Recall} & \textbf{f1-score} \\ \hline
+    Whistle & $1.00$ & $1.00$ & $1.00$ \\
+    Tomte & $1.00$ & $1.00$ & $1.00$ \\
+    Scattered\_Light & $1.00$ & $1.00$ & $1.00$ \\
+    \hline
+    \end{tabular}
+    \caption{Classification report of the Multimodal architecture.}
+    \label{tbl:RQ3_class_report_multimodal}
+\end{table}
+
+The resulting \acrshort{tsne} plot confirms the perfect test set results. There are two points that may be outliers or wrongfully classified by the Gravity Spy project \citep{zevin2017gravity}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Grad Assignment/Images/tSNE_RQ3_ImageModel_test.png}
+    \caption{t-SNE visualization of Multimodal architecture.}
+    \label{fig:tsne_multimodal}
+\end{figure}

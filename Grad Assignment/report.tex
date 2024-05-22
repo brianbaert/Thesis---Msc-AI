@@ -1,12 +1,6 @@
 \documentclass{ou-report}
-
 \citestyle{agu}
 \usepackage{float}
-
-% Dit template is gemaakt door P.J. Molijn in het kader van zijn afstuderen aan de OU in 2014.
-% Waarvoor hartelijk dank.
-% Minieme maar belangrijke wijzigingen zijn aangebracht door E.M. van Doorn
-% Het template is versimpeld door Sylvia Stuurman, 2019.
 
 \makenoidxglossaries
 
@@ -58,14 +52,13 @@
 \newacronym{umap}{UMAP}{Uniform Manifold Approximation and Projection}
 \newacronym{tsne}{t-SNE}{t-Distributed Stochastic Neighbor Embedding}
 
+
 \begin{document}
 \pagestyle{plain}
 \title{Enhancing Glitch Identification in Gravitational Wave Analysis: A Continual Learning Approach}
 \author{Brian Baert}
 
 \input{title}
-\clearpage
-\printglossary[type=\acronymtype]
 \clearpage
 
 \pagenumbering{roman}
@@ -78,13 +71,17 @@
 % Optional Dedication, Acknowledgement
 %\input{dedication}
 
+
 \input{acknowledgement}
+
 \tableofcontents
 
-%Optional: list of figures, list of tables
 \listoffigures
 
 \listoftables
+
+\clearpage
+\printnoidxglossaries
 
 %% Include an optional summary page.
 %\input{Summary/summary}
@@ -101,11 +98,9 @@
 
 \input{Chapter4/chapter4}
 
-%\input{Chapter5/chapter-5}
+\input{Chapter5/chapter5}
 
-%\input{Chapter6/chapter-6}
-
-
+\input{Chapter6/chapter6}
 
 \backmatter
 \pagenumbering{roman}
@@ -116,12 +111,9 @@
 %% Use letters for the chapter numbers of the appendices.
 %\appendix
 \appendix
-  \input{Appendices/appendix1}
-  \input{Appendices/appendix2}
-  \input{Appendices/appendix3}
-  \input{Appendices/appendix4}
-%  \input{Appendices/appendix-b}
-%  \input{Appendices/appendix-c}
-
+\input{Appendices/appendix1}
+\input{Appendices/appendix2}
+\input{Appendices/appendix3}
+\input{Appendices/appendix4}
 
 \end{document}

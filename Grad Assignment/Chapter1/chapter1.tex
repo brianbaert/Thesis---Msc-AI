@@ -1,7 +1,9 @@
 \chapter{Introduction}
+\label{ch:1}
 \section{Introduction}
 \label{sec-Introduction}
-\acrlong{gw} (\acrshort{gw}) are ripples in space-time caused by violent disruptions in the universe. Massive accelerating objects like \acrlong{ns} (\acrshort{ns}) and \acrlong{bbh} (\acrshort{bbh}) cause such strong waves propagating in all directions. Other cataclysmic events, responsible for \acrshort{gw}, are supernovae and obviously residues of the Big Bang \citep{CaltechWhatAreGW}. \\
+The following thesis investigates \acrlong{cl} as a framework for robust and efficient \acrlong{gw} analysis. \acrshort{cl} algorithms excel at incrementally learning from new data streams while retaining knowledge of previously encountered classes \citep{van2022three, qu2021recent, de2021continual}.\\
+\acrshort{gw} are ripples in space-time caused by violent disruptions in the universe. Massive accelerating objects like \acrlong{ns} (\acrshort{ns}) and \acrlong{bbh} (\acrshort{bbh}) cause such strong waves propagating in all directions. Other cataclysmic events, responsible for \acrshort{gw}, are supernovae and obviously residues of the Big Bang \citep{CaltechWhatAreGW}. \\
 Although the generation of \acrshort{gw} is a frenzy of energy, by the time the waves (invisible for the human eye) reach earth they are imperceptibly small.\\
 The birth of \acrshort{ligo} (\acrlong{ligo}) offered a way to make very small measurements, equivalent to fractional changes in distance of $10^{-21}$ (smaller than an atom), microscopic measurements needed to detect \acrshort{gw} \citep{zevin2017gravity,glanzer2023data}. \\
 \acrshort{ligo} has already completed three observing runs, abbreviated \acrshort{o1} (\acrlong{o1}), \acrshort{o2} (\acrlong{o2}) and \acrshort{o3} (\acrlong{o3}). At this very moment of writing the fourth observing run started on May the 24th of 2023 and the first period, 04a has ended on January the 16th of 2024 \citep{LIGORunPlan}. \\
@@ -14,7 +16,7 @@ Glitches are short-lived non-Gaussian noise features that can be instrumental or
 
 \acrshort{gw} detectors host hundreds of thousands of auxiliary channels that monitor the state of the instruments and the environment. They have shown promise in characterizing glitches, such as \acrlong{idq} (\acrshort{idq}) \citep{essick2020idq,davis2022detector} or Elastic-net based ML for Understanding (EMU) \citep{colgan2020efficient} have been studied. The fusion of \acrfull{fd} analysis and \acrshort{ml} offers a robust framework for glitch detection in \acrshort{gw} analysis. Moreover, the scalability of \acrshort{fd} analysis across auxiliary channels holds promise for real-time glitch detection \citep{colgan2020efficient, benedetto2023ai}.
 
-The limitations of the current classical approaches of offline training a neural network are evident due to the new data expected to be delivered in the fourth observing run \citep{wu2024advancing}. In this context, the field of \acrfull{il} or \acrfull{cl} emerges as a compelling area. The \acrshort{il} approach offers a fresh framework that allows models to learn from a continuously expanding dataset while still maintaining performance on previously encountered data \citep{van2022three, qu2021recent, de2021continual}.
+The limitations of the current classical approaches of offline training a neural network are evident due to the new data expected to be delivered in the fourth observing run \citep{wu2024advancing}. In this context, the field of \acrfull{il} or \acrshort{cl} emerges as a compelling area. The \acrshort{il} approach offers a fresh framework that allows models to learn from a continuously expanding dataset while still maintaining performance on previously encountered data \citep{van2022three, qu2021recent, de2021continual}.
 Unlike batch learning, where models are trained on static datasets, \acrshort{cl} enables models to adapt incrementally to new data while retaining knowledge of previously encountered classes \citep{kirkpatrick2017overcoming}. 
 
 In the context of \acrshort{gw} analysis, \acrshort{cl} strategies allow us to accommodate new glitch classes (as \acrshort{ligo} continues to operate and collect data, new glitch classes may emerge where \acrshort{cl} ensures that the model can seamlessly incorporate these novel classes without compromising performance on existing ones). It mitigates catastrophic forgetting (traditional \acrshort{ml} models tend to forget previously learned information when exposed to new data. \acrshort{cl} methods such as \acrfull{ewc} or memory-augmented architectures address this issue by preserving knowledge of existing glitch morphologies \citep{abbott2023open, kirkpatrick2017overcoming}.  
@@ -36,8 +38,8 @@ Searching for other types of signals via \acrshort{ml} or \acrshort{dl} remains 
 
 A last application area where \acrshort{dl} is being investigated is the estimation of astrophysical parameters. Here Bayesian approaches have the ability to proof usefull, but the computational cost of calculating all posterior probabilities is an obstacle \citep{cuoco2020enhancing}.
 
-\subsection{Thesis structure}
-T.b.D.
+\section{Thesis structure}
+The thesis is structr
 \newpage
 
 

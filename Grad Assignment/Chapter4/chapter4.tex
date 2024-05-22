@@ -1,4 +1,5 @@
 \chapter{Models and Results}
+\label{chap:models_and_results}
 \section{Technical aspects}
 The code repository containing all notebooks, models and results can be found via \newline \url{https://github.com/brianbaert/MscThesis.git} 
 
@@ -576,6 +577,7 @@ From the Confusion Matrix, f1 plot and Classification report as shown in Figure 
 
 \newpage
 \subsubsection{SCR strategy}
+\label{subsub:RQ1_SCR}
 As described in \ref{sec:SCR}, \acrshort{scr} leverages the Nearest-Class-Mean classifier as a substitute for the Softmax classifier by addressing recency bias and avoiding structural changes in the fully-connected layer for new classes. There is however a risk involved, the effectiveness of \acrshort{scr} might depend on the quality of the data embeddings and the between-class separation. It also has the tendency of introducing additional bias \citep{mai2021supervised, aleixo2023catastrophic}.   
 
 \begin{figure}[H]
@@ -671,20 +673,19 @@ As depicted in Figure \ref{fig:tSNE_FD_Naive}, the t-SNE visualization demonstra
 A similar interpretation can be made from Figure \ref{fig:umap_FD_Naive}. The 'Whistle' class forms a distinct elongated cluster. This indicates that the instances are quite alike in the high-dimensional space. The 'Tomte' cluster appears as a dense group, yet it is proximate to other clusters. It is evident that there is overlap among different classes. This raises the concern whether some instances might have been incorrectly classified during manual labeling. 
 
 \begin{figure}[ht]
-\centering
-\begin{subfigure}
   \centering
-    \includegraphics[width=0.7\textwidth]{Grad Assignment/Images/tSNE_FractalDimension_naive_test.png}
+    \includegraphics[width=0.9\textwidth]{Grad Assignment/Images/tSNE_FractalDimension_naive_test.png}
     \caption{t-SNE visualization Naive FD strategy}
     \label{fig:tSNE_FD_Naive}
-\end{subfigure}
-\begin{subfigure}
+\end{figure}
+
+\begin{figure}[H]
   \centering
-    \includegraphics[width=0.7\textwidth]{Grad Assignment/Images/umap_FractalDimension_naive_test.png}
+    \includegraphics[width=0.9\textwidth]{Grad Assignment/Images/umap_FractalDimension_naive_test.png}
     \caption{UMAP visualization Naive FD strategy}
     \label{fig:umap_FD_Naive}
-\end{subfigure}
 \end{figure}
+
 
 \subsubsection{LwF strategy}
 \label{subsubsec:RQ2_lwf}
@@ -721,9 +722,9 @@ The trained model has an overall accuracy of $92\%$, less than the Naive baselin
     \label{tbl:RQ2_class_report_FD_LwF}
 \end{table}
 
-The Backward Transfer (BWT) metric is $-0.0654$, suggesting the model had a slight decline in performance on the old task after learning the new task. However, the magnitude of forgetting is relatively small. \\
+The Backward Transfer (BWT) metric is $-0.0654$, suggesting the model had a slight decline in performance on the old task after learning the new task. However, the magnitude of forgetting is relatively small. 
 
-\begin{figure}[ht]
+\begin{figure}[!ht]
 \centering
 \begin{subfigure}
   \centering
@@ -760,7 +761,7 @@ The model outputs the last encountered class 'Whistle' in all test cases.
 The strategy is implemented with the same hyperparameter choices as described in \ref{subsubsec:RQ1_EWC}. The benchmark as described in \ref{subsubsec:RQ2_naive} is used. \\
 The trained model has an overall accuracy of $90\%$, less than the Naive baseline. The F1 scores (see Table \ref{tbl:RQ2_class_report_FD_EWC}) are all less than those of the Naive baseline. 
 
-\begin{figure}[H]
+\begin{figure}[!ht]
 \centering
 \begin{subfigure}
   \centering
@@ -776,7 +777,7 @@ The trained model has an overall accuracy of $90\%$, less than the Naive baselin
 \label{fig:cm_f1_FD_EWC}
 \end{figure}
 
-\begin{table}[ht]
+\begin{table}[!ht]
 \centering
     \begin{tabular}{|l|c c c|}
     \hline
@@ -790,16 +791,14 @@ The trained model has an overall accuracy of $90\%$, less than the Naive baselin
     \label{tbl:RQ2_class_report_FD_EWC}
 \end{table}
 
-
-The Backward Transfer (BWT) metric is $-0.1176$, suggesting a moderate level of catastrophic forgetting on the previous experiences after learning the new experience.\\
+The Backward Transfer (BWT) metric is $-0.1176$, suggesting a moderate level of catastrophic forgetting on the previous experiences after learning the new experience.
 
 \subsubsection{DER strategy}
 \label{subsubsec:RQ2_der}
-
 The strategy is implemented with the same hyperparameter choices as described in \ref{subsubsec:RQ1_DER} with the benchmark as described in \ref{subsubsec:RQ2_naive}. \\
 The trained model has an overall accuracy of $90\%$, less than the Naive baseline. The F1 scores (see Table \ref{tbl:RQ2_class_report_FD_EWC}) are all less than those of the Naive baseline. 
 
-\begin{figure}[H]
+\begin{figure}[!ht]
 \centering
 \begin{subfigure}
   \centering
@@ -829,22 +828,98 @@ The trained model has an overall accuracy of $90\%$, less than the Naive baselin
     \label{tbl:RQ2_class_report_FD_DER}
 \end{table}
 
-The Backward Transfer (BWT) metric is $0.0131$, indicating that the model was successful in mitigating forgetting on the old task while the model learned the new task. A BWT close to zero (ideal scenario) indicates that the model is able to maintain its performance on old tasks while learning new ones with no degradation in performance on old tasks.\\
+The Backward Transfer (BWT) metric is $0.0131$, indicating that the model was successful in mitigating forgetting on the old task while the model learned the new task. A BWT close to zero (ideal scenario) indicates that the model is able to maintain its performance on old tasks while learning new ones with no degradation in performance on old tasks.
+
 
 \subsubsection{DER++ strategy}
 \label{subsubsec:RQ2_der++}
+The strategy is implemented with the identical hyperparameter values as described in \ref{subsubsec:RQ1_DER++} with the benchmark as described in \ref{subsubsec:RQ2_naive}. \\
+The trained model has an overall accuracy of $77\%$, this is the worst performing model. The F1 scores (see Table \ref{tbl:RQ2_class_report_FD_DER++}) are all less than those of the Naive baseline. Especially very bad performance metrics on the 'Tomte' glitch. 
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{Images/cm_FD_model_DER++.png}  
+  \label{fig:fd_sub-first}
+\end{subfigure}
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.50\textwidth]{Images/f1_FD_model_DER++.png}  
+  \label{fig:fd_sub-second}
+\end{subfigure}
+\caption{Confusion matrix and f1 plot for DER++ FD strategy}
+\label{fig:cm_f1_FD_DER++}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Precision} & \textbf{Recall} & \textbf{f1-score} \\ \hline
+    Whistle & $0.80$ & $1.00$ & $0.89$ \\
+    Tomte & $0.96$ & $0.36$ & $0.52$ \\
+    Scattered\_Light & $0.68$ & $0.98$ & $0.81$ \\
+    \hline
+    \end{tabular}
+    \caption{Classification report of the FD DER++ strategy.}
+    \label{tbl:RQ2_class_report_FD_DER++}
+\end{table}
 
 The Backward Transfer (BWT) metric is $-0.0458$, suggesting the model had a slight decline in performance on the old task after learning the new task. However, the magnitude of forgetting is relatively small. 
+
+The \acrshort{tsne} plot in \ref{fig:tsne_FD_DER++} illustrates the difficulty of differentiating between 'Tomte' and the other two classes. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Grad Assignment/Images/tSNE_FractalDimension_DER++_test.png}
+    \caption{t-SNE visualization DER++ FD strategy}
+    \label{fig:tsne_FD_DER++}
+\end{figure}
 
 
 \subsubsection{SCR strategy}
 \label{subsubsec:RQ2_scr}
-
+The \acrshort{scr} stategy on the Fractal Dimension data has a similar implementation as in \ref{subsub:RQ1_SCR}. The model has an overall accuracy of $93\%$ and scores second just after the Naive strategy used in \ref{subsubsec:RQ2_naive}. 
+The weight distributions shown in Figure \ref{tbl:scr_fd_weights} indicate the difficulty the model has with distinguishing 'Whistle' and 'Tomte' glitches. Behavior that is confirmed by the \acrshort{tsne} and \acrshort{umap} plots in Figures \ref{fig:tsne_FD_SCR} and \ref{fig:umap_FD_SCR}. 
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{Images/SCR_MultiView_exp_0.png} & \includegraphics[width=0.4\textwidth]{Images/SCR_MultiView_exp_2.png} \\
+\end{tabular}
+\label{tbl:scr_fd_weights}
+\end{center}
 The Backward Transfer (BWT) metric is $0.3595$, a high value, suggesting that the model suffers from moderate catastrophic forgetting on the old task after learning the new task.  
 
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Precision} & \textbf{Recall} & \textbf{f1-score} \\ \hline
+    Whistle & $0.94$ & $0.96$ & $0.95$ \\
+    Tomte & $0.93$ & $0.85$ & $0.89$ \\
+    Scattered\_Light & $0.91$ & $0.96$ & $0.94$ \\
+    \hline
+    \end{tabular}
+    \caption{Classification report of the FD SCR strategy.}
+    \label{tbl:RQ2_class_report_FD_SCR}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Images/tSNE_FractalDimension_SCR_test.png}
+    \caption{t-SNE visualization SCR FD strategy}
+    \label{fig:tsne_FD_SCR}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Images/umap_FractalDimension_SCR_test.png}
+    \caption{UMAP visualization SCR FD strategy}
+    \label{fig:umap_FD_SCR}
+\end{figure}
 \newpage
 
 \subsection{RQ3}
+\label{subsub:rq3}
 The training is done on the dataset provided by Melissa Lopez, used in the research by \citep{laguarta2023detection, dooney2022dvgan, dooney2024cdvgan}. The training is done for 30 epochs on the classes \{Whistle, Scattered\_Light, Tomte\}. 
 
 The ultimate version of the model achieved a Cross Entropy Loss of $0.0122$ and a training accuracy of $99.61\%$. The outcomes detailed in \ref{tbl:RQ3_class_report_multimodal} for the unseen test samples were remarkably impressive, demonstrating flawless precision, recall, and f1-score across all three categories. Notably, the performance on the Tomte glitch significantly surpassed that of earlier 'best' models as discussed in \ref{subsubsec:RQ1_DER} and \ref{subsubsec:RQ2_naive}.
@@ -863,11 +938,19 @@ The ultimate version of the model achieved a Cross Entropy Loss of $0.0122$ and 
     \label{tbl:RQ3_class_report_multimodal}
 \end{table}
 
-The resulting \acrshort{tsne} plot confirms the perfect test set results. There are two points that may be outliers or wrongfully classified by the Gravity Spy project \citep{zevin2017gravity}. 
+The resulting \acrshort{tsne} plot confirms the perfect test set results. There are two points that may be outliers or incorrectly classified by the Gravity Spy project \citep{zevin2017gravity}. 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{Grad Assignment/Images/tSNE_RQ3_ImageModel_test.png}
     \caption{t-SNE visualization of Multimodal architecture.}
     \label{fig:tsne_multimodal}
+\end{figure}
+\newpage
+The Saliency mapping in Figure \ref{fig:saliency_mapping_multimodal} illustrates the distinctive capabilities of the model. There are clear boundaries between the three glitch categories. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Grad Assignment/Images/SaliencyMapping_Multimodal_test.png}
+    \caption{Saliency mapping of the Multimodal architecture.}
+    \label{fig:saliency_mapping_multimodal}
 \end{figure}

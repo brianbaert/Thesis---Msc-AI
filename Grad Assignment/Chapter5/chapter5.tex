@@ -1,4 +1,31 @@
 \chapter{Discussion}
 \label{ch:5}
 \section{General}
-tbd
+\subsection{RQ1}
+Most of the \acrshort{cl} approaches on the spectrogram images generated class predictions that aligned with the existing Gravity Spy classes. An overview of the corresponding F1 scores can be found in Table \ref{tbl:RQ1_discus_overview_f1_score}. There were, however, some oddities and difficulties. \\
+From the \acrshort{tsne} and \acrshort{umap} plots it seemed like the majority of the strategies have difficulty with distinguishing 'Blip', 'Blip\_Low\_Frequency' and 'Tomte' from one another. Only \acrshort{der} was able to achieve high precision and recall on these glitches. The question arises whether the three classes represent some form of similar short-duration anomaly in the data.  Further research could prove useful.
+
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c c c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Naive} & \textbf{LwF} & \textbf{AGEM} & \textbf{EWC} & \textbf{DER} & \textbf{DER++} & \textbf{SCR}\\ \hline
+    Blip & $0.63$ & $0.72$ & $0.82$ & $0.70$ & \textcolor{blue}{$0.92$} & $0.87$ & $0.71$\\
+    Blip\_Low\_Frequency & $0.62$ & $0.67$ & $0.72$ & $0.50$ & \textcolor{blue}{$0.93$} & $0.91$ & $0.80$\\
+    Extremely\_Loud & $0.89$ & $0.90$ &  $0.91$ & $0.83$ & $0.92$ & $0.81$ & $0.91$\\
+    Fast\_Scattering & $0.86$ & $0.97$ &  $0.95$ & $0.95$ & $0.90$ & $0.95$ & $0.92$\\
+    Koi\_Fish & $0.85$ & $0.90$ & $0.84$ & $0.88$ & $0.91$ & $0.85$ & $0.87$\\
+    Low\_Frequency\_Burst & $0.90$ & $0.95$ & $0.95$ & $0.94$ & $0.85$ & $0.92$ & $0.91$\\
+    Low\_Frequency\_Lines & $0.98$ & $0.96$ & $0.97$ & $0.94$ & $0.95$ & $0.96$ & $0.86$\\
+    Scattered\_Light & $0.91$ & $0.95$ &$0.95$ & $0.90$ & $0.87$ & $0.94$ & $0.88$\\
+    Tomte & $0.54$ & $0.80$ &$0.55$ & $0.86$ & \textcolor{blue}{$0.93$} & $0.87$ & $0.64$\\
+    Whistle & $1.00$ & $1.00$ & $0.99$ & $0.97$ & $0.98$ & $1.00$ & $0.99$\\
+    \hline
+    \end{tabular}
+    \caption{f1-score table for each strategy.}
+    \label{tbl:RQ1_discus_overview_f1_score}
+\end{table}
+
+\subsection{RQ2}
+\section{The Avalanche package}
+While Avalanche \citep{lomonaco2021avalanche} offers a robust framework for handling a variety of data streams, the current version does have its limitations. It does not seamlessly integrate different modalities like images and text. Customization for multimodal data requires significant effort as the core framework lacks support. This lack of inherent support posed an additional risk and is the reason why the proposed solution for RQ3 in section \ref{subsub:rq3} feels like not in line with the \acrshort{cl} paradigm. \\

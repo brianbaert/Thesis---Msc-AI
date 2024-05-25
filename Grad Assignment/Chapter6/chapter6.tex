@@ -1,8 +1,10 @@
-\chapter{Conclusions and recommendations}
+\chapter{Conclusions and Future work}
 \label{ch:6}
 \section{Conclusions}
-tbd
-\section{Recommendations}
+The thesis research attempts at bridging the gap between continual learning and classical deep learning based glitch classification. \acrshort{cl} was able 
+The thesis results demonstrate that combining strain data and auxiliary channel data in a multimodal framework not only improves classification performance but also enriches our understanding of glitches. 
+
+\section{Future work}
 The research done as described in \ref{sec-Research} and \ref{chap:models_and_results} is promising about the potential of investigating multi-modal fusion architectures for \acrshort{gw} analysis, the combination of Spectrogram Image Analysis combined with Fractal Dimensions of Auxiliary Channels gave outstanding results \ref{subsub:rq3}. \\
 Further research, especially the integration of attention \citep{vaswani2017attention, niu2021review} should be investigated on additional fractal dimension data, preferably with more than 3 glitch categories. \\
 Another topic of interest and research is how to succesfully apply \acrshort{cl} in a Multimodal setting. There is some research ongoing, one of the most notable solutions is the Climb benchmark \citep{srinivasan2022climb}. This benchmark is designed to study \acrshort{cl} for multimodal tasks where it evaluates models in two phases. An upstream phase where the model is trained on a sequence of tasks and evaluated on its ability to retain knowledge from previous tasks while learning new ones. And a downstream phase where the model is evaluated on the ability to transfer knowledge to new tasks with minimal data. 

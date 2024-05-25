@@ -26,6 +26,45 @@ From the \acrshort{tsne} and \acrshort{umap} plots it seemed like the majority o
     \label{tbl:RQ1_discus_overview_f1_score}
 \end{table}
 
+Although the results are acceptable to good and correspond with the original Gravity Spy classes, not all glitch types have been incorporated in the experiment. \\
+Just as described by \citep{wu2024advancing} the existing \acrshort{dl} classifiers face limitations. With the Fourth Observing Run ongoing. They propose multi-view fusion attention based approaches. 
+
 \subsection{RQ2}
+The effectiveness of \acrshort{cl} approaches in incorporating auxiliary channel data for detecting and classifying glitch morphologies has been explored. The architecture employed, consisting of convolutional, dropout and batch normalization layers, was able to effectively learn to differentiate glitch types. 
+Due to the limited (and difficult) availability of auxiliary data for only three glitch classes, the findings for the effectiveness of \acrshort{cl} based on the calculated \acrshort{fd} of a selection of auxiliary channels should, however, be treated with caution. 
+From Table \ref{tbl:RQ2_discus_overview_f1_score} it is noticeable that the Naive strategy was able to produce the best results together with the provided convolutional architecture. The \acrshort{scr}, \acrshort{lwf} and \acrshort{der} strategies also have acceptable results. \\
+The results follow the conclusions made by \citep{laguarta2024detection}, the information from auxiliary channels serves as witnesses to detect glitches. 
+
+\begin{table}[ht]
+\centering
+    \begin{tabular}{|l|c c c c c c c|}
+    \hline
+    \textbf{Glitch type} & \textbf{Naive} & \textbf{LwF} & \textbf{AGEM} & \textbf{EWC} & \textbf{DER} & \textbf{DER++} & \textbf{SCR}\\ \hline
+    Scattered\_Light & \textcolor{blue}{$0.96$} & $0.95$ &$0.00$ & $0.94$ & $0.94$ & $0.81$ & $0.94$\\
+    Tomte & \textcolor{blue}{$0.89$} & $0.89$ &$0.00$ & $0.86$ & $0.86$ & $0.52$ & $0.89$\\
+    Whistle & \textcolor{blue}{$0.92$} & $0.92$ & $0.51$ & $0.93$ & $0.91$ & $0.89$ & $0.95$\\
+    \hline
+    \end{tabular}
+    \caption{f1-score table for each strategy.}
+    \label{tbl:RQ2_discus_overview_f1_score}
+\end{table}
+
+\acrshort{agem} suffered from extreme catastrophic forgetting. This could be due to an error in the implementation or an incorrect choice of hyperparameter values. \\
+
+\subsection{RQ3}
+In adressing the final research question, we explored the potential of combining the strain data (in the form of spectrograms) with the auxiliary channel data (fractal dimension matrix). The findings gave outstanding results. These results, as documented in \ref{subsub:rq3}, gave $99.61\%$ training accuracy as well as $100\%$ test set accuracy. \\
+Strain data and auxiliary channel data each capture different aspects of the underlying physical processes. By fusing these modalities, this lead to a more comprehensive representation of the system. The spectrograms provide temporal and frequency-domain features, while auxiliary channels offer context-specific information (e.g. environmental conditions, instrument status, ...).
+The joint representation enabled the model to learn discriminative features that are not apparent in either modality alone. This result was visualised via the \acrshort{tsne} plot in Figure \ref{fig:tsne_multimodal}.
+
+The Late Fusion implementation in Pytorch was used because this was the most straightforward and less time consuming. The outputs of both the MultiViewColorNet and FractalDimensionConvNet were concatenated and sent through a fully connected layer. The experiments, analogous to RQ2, were carried out on a selection of three glitches due to the limited and difficult availability of the auxiliary channel information. 
+
+\newpage
 \section{The Avalanche package}
 While Avalanche \citep{lomonaco2021avalanche} offers a robust framework for handling a variety of data streams, the current version does have its limitations. It does not seamlessly integrate different modalities like images and text. Customization for multimodal data requires significant effort as the core framework lacks support. This lack of inherent support posed an additional risk and is the reason why the proposed solution for RQ3 in section \ref{subsub:rq3} feels like not in line with the \acrshort{cl} paradigm. \\
+Another issue we encountered were the evaluation mechanisms, calculating the \acrshort{bwt} and \acrshort{fwt} metrics gave quite some errors.\\
+These \acrshort{cl} specific metrics were omitted during the time-consuming training of the RQ1 experiments.\\
+Avalanche's performance can vary depending on the specific task and data at hand. It might not always provide the optimal solution for certain types of tasks, an example was the failure of the \acrshort{agem} strategy in the experiments of RQ2.\\
+Possible alternatives are e.g. Continuum and Sequoia. Continuum \citep{douillard2021continuum}, offers a high-level interface for \acrshort{cl} with a variety of strategies and benchmarks. It is known for its simplicity and ease of use.\\
+Sequoia \citep{normandin2021sequoia} is a flexible research framework specifically designed to make development easy and understandable. It provides a unified interface for a wide range of \acrshort{cl} strategies and benchmarks. 
+
+

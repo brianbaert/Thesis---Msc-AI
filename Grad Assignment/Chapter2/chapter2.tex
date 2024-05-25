@@ -338,10 +338,56 @@ BWT_{q} = \frac{1}{q-1} \sum_{p=1}^{q-1} (a_{q,p} - a_{p,p})
 
 \subsubsection{Forward transfer ($FWT_{q}$)}
 Forward transfer refers to the degree to which the continuous learning of the $q^{\text{th}}$ task has the potential to influence the performance of future tasks. In \citep{lopez2017gradient}, the accuracy on the test set of the $p^{\text{th}}$ task at random initialization is represented as $b_{p}$. The forward transfer metric, denoted as $FWT_{q}$, is defined as follows: \begin{equation} FWT_{q} = \frac{1}{q-1} \sum_{p=2}^{q} (a_{p-1,p} - b_{p}) \end{equation}
-\citep{wang2023comprehensive}test
+\citep{wang2023comprehensive}
+
+\subsection{Multimodal Fusion}
+\acrshort{dl} models increasingly interact through multiple modalities, such as vision, text, touch, ... Each modality provides a unique perspective on the environment. Multimodal Fusion is the technique for integrating information from different modalities, in case of glitch detection this could be the spectrogram image and the calculated fractal dimensions. By effectively fusing information, models can achieve superior performance in various tasks. \\
+\citep{ngiam2011multimodal, gao2020survey, zhang2021exploring}
+Fusing different modalities is one of the challenges in multimodal learning. There are two approaches (see Figure \ref{fig:earlyVsLate} commonly used, 'Early Fusion' and 'Late Fusion'. Depending on the location of the fuse operation. 
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Grad Assignment/Images/EarlyVsLate_fusion.png}
+    \caption{Early vs Late Fusion \citep{kim2021multimodal} }
+    \label{fig:earlyVsLate}
+\end{figure}
+
+To define Early and Late Fusion, let $M$ represent the total number of modalities. Each modality input is represented as a vector $\mathbf{v}_{m}$. We assume a K-class classification scenario where $y$ represents the labels. The prediction probability of the $k$-th class from the $m$-th modality is denoted by $p_{m}^{k}$, and the final prediction probability of the $k$-th class by the model is denoted by $p^{k}$. \citep{liu2018learn}\\
+
+\newpage
+With Early Fusion, features from different modalities are combined at the input level. If for instance we have a text and image, early fusion merges the raw text and image features before feeding them into the model. This assumes that all modalities have compatible representations.\\
+
+In Early Fusion, a unified model $h$ is trained to capture the relationships and interactions among low-level features. The resulting prediction is given by 
+\[
+p = h([\mathbf{v}_{1}, ..., \mathbf{v}_{m}])
+\]
+Early Fusion has a simple pipeline because only one model is needed for training.\\
+
+With Late Fusion, each modality is processed independently and their features are combined at a later stage. This allows each modality to learn its own representations and then combines them.\\
+Late Fusion combines unimodal decision values through a fusion mechanism $F$ (such as averaging, voting, etc.). Given that $h_{i}$ is applied to modality $i$, the final prediction is
+\[
+p = F\left( h_{1}(\mathbf{v}_{1}), ..., h_{m}(\mathbf{v}_{m})\right)
+\]
+This approach permits the utilization of various models, providing greater adaptability.
+\\
+
+Usually, specialized networks are employed for various modalities to produce their respective representations, which are then combined or aggregated. Subsequently, a prediction is made based on the aggregated representation, typically using another neural network to capture the interactions between the different modalities. Summation (or averaging) and concatenation are two frequently used aggregation techniques. 
+\[
+\mathbf{u} = \left[ f_{1}(\mathbf{v}_{1}), ..., f_{m}(\mathbf{v}_{m}) \right]
+\]
+where $f_{m}$ is a domain specific neural network. 
+Given the combined vector output $\mathbf{u}$, another network $g$ computes the final output
+\[
+p = g(\mathbf{u})
+\]
+
+\citep{liu2018learn, gadzicki2020early, wang2022comprehensive}
+
+
+
 
 \subsection{Python packages}
-A recent toolbox called \verb|PyCIL| \citep{zhou2023class, zhou2023pycil} implements several state-of-the-art \acrshort{il} algorithms. The package \verb|Avalanche| \citep{lomonaco2021avalanche} provides a library for benchmarking, training, prototyping, training and evaluation of \acrshort{cl} algorithms. Continuum \citep{douillardlesort2021continuum} is a library that provides data loading functionalities for \acrshort{cl}. 
+A recent toolbox called \verb|PyCIL| \citep{zhou2023class, zhou2023pycil} implements several state-of-the-art \acrshort{il} algorithms. The package \verb|Avalanche| \citep{lomonaco2021avalanche} provides a library for benchmarking, training, prototyping, training and evaluation of \acrshort{cl} algorithms. Continuum \citep{douillard2021continuum} is a library that provides data loading functionalities for \acrshort{cl}. 
 
 \subsubsection{Avalanche}
 \label{sec:avalanche}
@@ -394,9 +440,9 @@ In case of a grey-scale image, the mapping is computed as $M_{ij} = \left| w_{h(
 
 In case the image is an RGB-image, the color channel $c$ must be taken into account. The authors \citep{simonyan2013deep} opt for the maximum value of $w$ over the different color channels: $M_{ij} = \max_{c} \left| w_{h(i,j,c)}\right|$
 
-\begin{figure}
+\begin{figure}[!hb]
     \centering
-    \includegraphics[width=0.6\textwidth]{Grad Assignment/Images/saliency_example.png}
+    \includegraphics[width=0.5\textwidth]{Grad Assignment/Images/saliency_example.png}
     \caption{Example saliency map and original image. Taken from \citep{newginsam2024}}
     \label{fig:saliency_example}
 \end{figure}

@@ -1,8 +1,13 @@
 \chapter{Conclusions and Future work}
 \label{ch:6}
 \section{Conclusions}
-The thesis research attempts at bridging the gap between continual learning and classical deep learning based glitch classification. \acrshort{cl} was able 
-The thesis results demonstrate that combining strain data and auxiliary channel data in a multimodal framework not only improves classification performance but also enriches our understanding of glitches. 
+This thesis effectively connects \acrshort{cl} and traditional \acrshort{dl} methods for classifying glitches in \acrshort{gw} data. By combining strain data with auxiliary channel data using a multimodal fusion framework, the research shows notable enhancements in classification accuracy and provides a more profound understanding of glitch properties. The study emphasizes several important discoveries: 
+\begin{itemize}
+    \item \textbf{Effectiveness of \acrshort{cl} strategies}: The implementation of various \acrshort{cl} strategies such as Naive \acrshort{cl}, \acrfull{lwf}, \acrfull{agem}, \acrfull{ewc}, \acrfull{der}, DER++, and \acrfull{scr} revealed that while the Naive approach exhibited best performance, other methods also showed promise. \acrshort{agem} suffered from extreme catastrophic forgetting, indicating potential implementation issues or suboptimal hyperparameter choices. 
+    \item \textbf{Multimodal Fusion}: Integrating strain data (Q scans) with auxiliary channel data (fractal dimension matrices) resulted in exceptional outcomes, reaching up to 100\% accuracy on the test set. This combination offered a more holistic view of the system, encapsulating various facets of the underlying physical processes and allowing the model to identify distinctive features not visible in individual modalities. 
+    \item \textbf{The Avalanche Framework}: Although the Avalanche Framework was useful for managing multiple datastreams, it faced difficulties in smoothly integrating diverse modalities and computing \acrshort{cl}-specific metrics. Future research should explore alternative frameworks like Continuum and Sequoia for improved support and efficiency in multimodal environments. 
+    \item \textbf{Research Methodology}: The research approach, based on thorough experimentation and analysis, confirmed the efficacy of multimodal fusion in classifying glitches. Employing convolutional networks with dropout and batch normalization layers was successful in distinguishing between glitch types, even with the limited auxiliary data available. 
+\end{itemize}
 
 \section{Future work}
 The research done as described in \ref{sec-Research} and \ref{chap:models_and_results} is promising about the potential of investigating multi-modal fusion architectures for \acrshort{gw} analysis, the combination of Spectrogram Image Analysis combined with Fractal Dimensions of Auxiliary Channels gave outstanding results \ref{subsub:rq3}. \\

@@ -3,19 +3,19 @@
 \section{Related work}
 \subsection{Gravity Spy}
 The construction of one of the main datasets for the classification and detection of glitches is the Gravity Spy dataset \citep{zevin2017gravity, glanzer2023data}. 
-The Gravity Spy dataset consists of a large set of Qscans (also called spectrograms). These Qscans are obtained via the Omicron algorithm pipeline \citep{robinet2020omicron}. Omicron originates from the Q-transformation \citep{chatterji2004multiresolution}. The colour scale, or normalized energy, used in these images, as in Figure \ref{fig:spectrogram_examples}, is the square of the \acrshort{snr} in a given Q-tile, divided by the mean squared magnitude for stationary white noise.
+The Gravity Spy dataset consists of a large set of Q-scans (spectrograms), which are time-frequency representations of detector strain data. These Q-scans are obtained via the Omicron algorithm pipeline \citep{robinet2020omicron}. Omicron performs analysis on multi-resolution time-frequency representations \citep{chatterji2004multiresolution}. The colour scale, or normalized energy, used in these images, as in Figure \ref{fig:spectrogram_examples}, is the square of the \acrshort{snr} in a given Q-tile, divided by the mean squared magnitude for stationary white noise.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{Images/omegascan_examples.jpg}
-    \caption{\acrshort{ligo} Qscan images of 'blip' (first row) and 'whistle' (second row) over four different durations \citep{zevin2017gravity}}
+    \includegraphics[width=0.75\textwidth]{Images/omegascan_examples.jpg}
+    \caption{\acrshort{ligo} Q-scan images of 'blip' (first row) and 'whistle' (second row) over four different durations \citep{zevin2017gravity}}
     \label{fig:spectrogram_examples}
 \end{figure}
 The researchers use visual inspection by citizen scientists as well as \acrshort{dl} classification using a \acrshort{cnn}. The \acrshort{cnn} outputs a confidence score $p$ for each glitch class by using a softmax layer. \\
 
 \subsection{Glitch classification}
-Because the \acrshort{gw} signal strength is weaker than the background noise, the preferred architecture is often a \acrshort{cnn}'s with wavelet and Q-transforms \cite{cuoco2020enhancing}. 
+Because the \acrshort{gw} signal strength is weaker than the background noise, the preferred architecture is often a \acrshort{cnn}'s with wavelet and Q-transforms \citep{cuoco2020enhancing}. 
 
-The proposed \acrshort{dl} methodology presented in \citep{bicskin2023fast} uses a combination of \acrshort{ml} and \acrshort{dl} algorithms for classification. It consists of two phases, first, they utilise feature extraction possibilities of the pre-trained \acrshort{dl} models Inception-v3 \citep{szegedy2016rethinking} and ResNet-50 \citep{he2016deep} on the Q-transformed glitch images. Secondly, they apply \acrshort{pca} to select 100 components, these serve as input for \acrshort{svm}, \acrshort{lr} and \acrshort{xgb} algorithms. They opted to use only 10 glitch classes from the Gravity Spy dataset and no up- or downsampling techniques to issue the imbalancedness of the dataset. All samples are Q-transformed before entering the training phase. The results showed that Inception-v3-based architectures perform faster and the \acrshort{lr} algorithm delivers the highest accuracy on the test set ($96.06$\%). Certain glitch morphologies like '1400 ripples', 'light modulation', 'Tomte' and 'None of the above' had substantially lower scores.
+The proposed \acrshort{dl} methodology presented in \citep{bicskin2023fast} uses a combination of \acrshort{ml} and \acrshort{dl} algorithms for classification. It consists of two phases, first, they utilise feature extraction possibilities of the pre-trained \acrshort{dl} models Inception-v3 \citep{szegedy2016rethinking} and ResNet-50 \citep{he2016deep} on the Q-transformed glitch images. Secondly, they apply \acrshort{pca} to select 100 components, these serve as input for \acrfull{svm}, \acrfull{lr} and \acrshort{xgb} algorithms. They opted to use only 10 glitch classes from the Gravity Spy dataset and no up- or downsampling techniques to address class imbalance in the dataset. All samples are Q-transformed before entering the training phase. The results showed that Inception-v3-based architectures perform faster and the \acrshort{lr} algorithm delivers the highest accuracy on the test set ($96.06$\%). Certain glitch morphologies like '1400 ripples', 'light modulation', 'Tomte' and 'None of the above' had substantially lower scores.
 
 The usage of \acrshort{cnn} for glitch classification is described in \citep{fernandes2023convolutional}. They opt for a ResNet \citep{he2016deep} architecture baseline (ResNet18 and ResNet34) and the \verb|fastai| \verb|fit_one_cycle| route. 
 
@@ -24,14 +24,14 @@ The updated Gravity Spy classification model \citep{jarov2023new} can differenti
 \subsection{Object detection for CBC}
 \begin{wrapfigure}{r}{5cm}
     \includegraphics[width=0.25\textwidth]{Images/od_bns.png}
-    \caption{Qscan generation and final 8-bit PNG image \citep{aveiro2022identification}}
+    \caption{Q-scan generation and final 8-bit PNG image \citep{aveiro2022identification}}
     \label{fig:od_bns}
 \end{wrapfigure}
 Researchers \citep{aveiro2022identification} have investigated the use of a classical single shot \acrlong{od} method, \acrfull{yolo} \citep{redmon2016you}, to detect a subset of \acrshort{cbc} events, namely \acrshort{bns} mergers. Single shot detector methods are cost- and time-efficient \citep{redmon2017yolo9000} and hence are suitable candidates to integrate in a \acrshort{cbc} object detection method. 
 They use generated \acrshort{bns} signals via the \verb|PyCBC| package \citep{nitz2020gwastro} and the generation pipeline from \citep{gebhard2019convolutional}. The generated signals are then randomly cut to the required 8s duration, with one condition, the generated waveform must be in the cut. 
-Just as in the Gravity Spy generation process \citep{zevin2017gravity}, the Q-transform \citep{chatterji2004multiresolution} is used to generate the Qscans (here they opt for the \verb|librosa| package \citep{mcfee2015librosa}). 
+Just as in the Gravity Spy generation process \citep{zevin2017gravity}, the Q-transform \citep{chatterji2004multiresolution} is used to generate the Q-scans (here they opt for the \verb|librosa| package \citep{mcfee2015librosa}). 
 
-The Qscans are converted to 8-bit PNG images as seen in Figure \ref{fig:od_bns}
+The Q-scans are converted to 8-bit PNG images as seen in Figure \ref{fig:od_bns}
 
 The bounding box coordinates of the \acrshort{gw} class are included in a separate text file per image. Labelling is automated as part of the generation pipeline. Initial tests were promising with acceptable \acrfull{map} results. The research team experimented with varying \acrshort{snr} parameters (between 10 and 20). Lower \acrshort{snr} degraded the resulting metrics. Although no real training data were used, exploratory tests on GW170817 \citep{abbott2017gw170817} and GW190425 \citep{abbott2020gw190425} \acrshort{bns} coalescence events indicate the model's ability to perform \acrshort{gw} detections.
 
@@ -46,7 +46,7 @@ Because exact measurements are not uniformly defined, approximations like \acrfu
     \caption{\acrshort{fd} plot for the L1:LSC-PRCL\_OUT\_DQ auxiliary witness channel. On the left plot nominal interferometer observing mode. On the right plot data with a growing rate of glitches. \citep{cavaglia2022characterization} }
     \label{fig:fd_L1_LSC_PRCL}
 \end{figure}
-In the left plot of Figure \ref{fig:fd_L1_LSC_PRCL} it is clear that the nominal \acrshort{fd} is static and $D_{F}$ ranges between 1 and 1.2. Investigating the Q-scans of the noise points with $D_{F} > 1.2$ shows, at least for three out of four points, a clear whistle signal is diagnosed. In the right plot a big amount of noisy glitches is shown, this renders the data unusable for \acrshort{gw} analysis. Their experiment was done on another data strain, showing similar results. They conclude that \acrshort{fd} can be used to investigate the stationarity (or non-) of the interferometer in the company of noise.  Periods with a lot of (high) frequency noise show an increase in \acrshort{fd} variability \citep{cavaglia2022characterization}.
+In the left plot of Figure \ref{fig:fd_L1_LSC_PRCL} it is clear that the nominal \acrshort{fd} is static and $D_{F}$ ranges between 1 and 1.2. Investigating the Q-scans of the noise points with $D_{F} > 1.2$ shows, at least for three out of four points, a clear whistle signal is diagnosed. In the right plot a big amount of noisy glitches is shown, this renders the data unusable for \acrshort{gw} analysis. Their experiment was done on another data strain, showing similar results. They conclude that \acrshort{fd} can be used to investigate the stationarity (or non-stationarity) of the interferometer in the company of noise.  Periods with a lot of (high) frequency noise show an increase in \acrshort{fd} variability \citep{cavaglia2022characterization}.
 
 Researchers \citep{laguarta2023detection} use a convolutional autoencoder approach to cope with the absence of a ground truth and the absence of absolute order (variety of magnitudes). Although there are many studies on glitch morphologies, we are not sure whether the proposed class is the real class. Autoencoders have the ability to discover new structures without prior knowledge \citep{bank2023autoencoders}. The absence of absolute ordering can be tackled via the application of periodic convolutions. 
 \begin{figure}
@@ -62,15 +62,22 @@ Safe auxiliary channel \acrshort{fd} analysis can be beneficial for noise detect
 \subsection{Glitch identification from Environmental data}
 A study by \citep{colgan2020efficient} extracts useful statistical information from auxiliary channels in the vicinity of a glitch (in a 2.5 second timewindow), the acquired data is then used in a logistic regressor classifier. To limit the amount of weights, elastic net regularization \citep{zou2005regularization} is applied for penalisation. 
 The results vary around 80 \% accuracy, but it does not predict the glitch class, only if it is a possible glitch or not. 
-
+\newpage
 \subsection{LIGO's fourth observing run}
-The initial evaluation of the fourth observing run (04) highlighted constraints in the architecture of the Gravity Spy machine learning model. Its simplicity led to challenges in generalization and the incapacity to effectively process inputs from multiple time windows \citep{wu2024advancing}. The drawbacks of the Gravity Spy classifier, as indicated in \citep{jarov2023new, alvarez2023gspynettree}, primarily include the significance of the location within the images. A line positioned at the top or bottom of the images is crucial as it represents various glitches at different frequencies. This characteristic poses difficulties for the traditional \acrshort{cnn} architecture in capturing distinctive features in glitch classes. Additionally, the shallow network structure necessitates substantial resizing of input dimensions, leading to a loss of information. Finally, the classifier struggles with an issue of confidence overfitting. In their study, researchers \citep{wu2024advancing} suggest a new architecture and compare three fusion strategies.
+The initial evaluation of the fourth observing run (04) highlighted constraints in the architecture of the Gravity Spy machine learning model. Its simplicity led to challenges in generalization and the incapacity to effectively process inputs from multiple time windows \citep{wu2024advancing}. The drawbacks of the Gravity Spy classifier, as indicated in \citep{jarov2023new, alvarez2023gspynettree}, primarily include the significance of the location within the images. A line positioned at the top or bottom of the images is crucial as it represents various glitches at different frequencies. This characteristic poses difficulties for the traditional \acrshort{cnn} architecture in capturing distinctive features in glitch classes. Additionally, the shallow network structure necessitates substantial resizing of input dimensions, leading to a loss of information. Finally, the classifier struggles with an issue of confidence overfitting. In their study, researchers \citep{wu2024advancing} suggest a new architecture and compare three fusion strategies (see Figure \ref{fig:fusionStrategies04}) (early, intermediate and late fusion) while introducing attention modules and label smoothing.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Grad Assignment/Images/fusion_strategies_O4.png}
+    \caption{Three fusion strategies applied on Gravity spy data \citep{wu2024advancing}}
+    \label{fig:fusionStrategies04}
+\end{figure}
+The novel classifier significantly improves upon the previous models by better handling diverse glitch types and reducing confidence overfitting. These advancements are crucial for accurately classifying glitches, thereby aiding in the detection and analysis of \acrshort{gw} in the ongoing 04 run and future observations. 
 \newpage
 \subsection{Incremental learning}
 \label{ref:sub_incremental}
 \subsubsection{Introduction}
-In \acrshort{il} or also called \acrshort{cl}, we feed the data progressively to the model and thus acquire new knowledge over time (just as humans do). It is especially useful and efficient in learning from sequential, non-stationary data, such as wave signals. 
-\citep{van2022three} illustrates the three scenarios of \acrshort{il} in terms of input $X$, context $C$ and within-context output space $Y$. 
+In \acrshort{il} or also called \acrshort{cl}, we feed the data progressively to the model and thus acquire new knowledge over time (just as humans do). It is especially useful and efficient in learning from sequential, non-stationary data, such as wave signals. One study illustrates the three scenarios of \acrshort{il} in terms of input $X$, context $C$ and within-context output space $Y$ \citep{van2022three}. 
 
 \begin{table}[H]
 \begin{tabularx}{0.9\textwidth}{l | X | l}
@@ -104,9 +111,9 @@ Looking at figure \ref{fig:mnistTaskProtocol} we can split MNIST according to th
      \caption{Split MNIST according to three scenarios from \citep{van2019three}}
      \label{tab:mnist_tasks}
 \end{table}
-The first scenario, Task-incremental learning (or Task-IL), involves an algorithm learning a set of distinct tasks sequentially, where the task identity is explicitly provided or clearly distinguishable. Models can be trained with task-specific components, or even use separate networks for each task. This approach avoids the problem of catastrophic forgetting (adapting to a different distribution usually leads to a significant decrease in the ability to capture the original ones \citep{wang2023comprehensive}) altogether \citep{ruvolo2013ella, masse2018alleviating}. But the main challenge is to effectively share the learnt representations while optimising the performance-complexity trade-off \citep{lopez2017gradient, vogelstein2020representation}. 
+The first scenario, Task-incremental learning (or Task-IL), involves an algorithm learning a set of distinct tasks sequentially, where the task identity is explicitly provided or clearly distinguishable. Models can be trained with task-specific components, or even use separate networks for each task. Together, this approach avoids the problem of catastrophic forgetting (adapting to a different distribution usually leads to a significant decrease in the ability to capture the original ones \citep{wang2023comprehensive}) \citep{ruvolo2013ella, masse2018alleviating}. But the main challenge is to effectively share the learnt representations while optimising the performance-complexity trade-off \citep{lopez2017gradient, vogelstein2020representation}. 
 
-The second scenario, Domain-incremental learning (or Domain-IL) encompasses an algorithm's ability to learn a sequence of tasks characterised by the same underlying problem structure (same classes) but varying contextual and in input distributions \citep{ke2021classic, mirza2022efficient}. Unlike the first scenario, the algorithm is not explicitly informed about the task at the test time. However, the output space remains consistent between tasks, indicating generalisability to unseen tasks \citep{aljundi2017expert}. 
+The second scenario, Domain-incremental learning (or Domain-IL) encompasses an algorithm's ability to learn a sequence of tasks characterised by the same underlying problem structure (same classes) but varying contextual and input distributions \citep{ke2021classic, mirza2022efficient}. Unlike the first scenario, the algorithm is not explicitly informed about the task at the test time. However, the output space remains consistent between tasks, indicating generalisability to unseen tasks \citep{aljundi2017expert}. 
 As explained in \citep{mirza2022efficient} domain-incremental learning can be used to learn the same set of objects (classes) over a variety of weather conditions (domains), while having access to the task-ID (current weather), this is illustrated in Figure \ref{fig:domain-incremental-weather}. 
 
 \begin{figure}[H]

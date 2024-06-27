@@ -65,7 +65,7 @@ The full PyTorch implementation can be found in Appendix \ref{appendix1}, in sho
     \item All parameters in the ResNet model are unfrozen, allowing them to be updated during training. 
     \item The last layer of the ResNet model, a fully connected layer, is replaced with a new linear layer that has 120 output features. 
     \item Two additional fully connected layers (\verb|self.fc2| and \verb|self.fc3|) are added, with the final layer outputting a number of features equal to \verb|num_classes|.
-    \item A dropout layer (\verb|self.dropout|) with a dropout probability of 0.3 is added to help prevent overfitting (according to \citep{park2017analysis} 0.3 is a good value for more complex CNN's like ResNet). 
+    \item A dropout layer (\verb|self.dropout|) with a dropout probability of 0.3 is added to prevent overfitting (according to \citep{park2017analysis} 0.3 is a good value for more complex CNN's like ResNet). 
     \item A batch normalization layer (\verb|self.bn|) is added to normalize the activations of the neurons in the network. 
 \end{itemize}
 
@@ -140,7 +140,8 @@ Due to the fact that the \acrshort{cl} package \verb|Avalanche| \citep{lomonaco2
 \section{Results}
 \subsection{RQ1}
 \label{subsec:RQ1}
-Each of the strategies are trained for 100 epochs on every task (of distinguishing between two glitch categories). The order in which the classes are fed is kept the same over all strategies (1 = \{Koi\_Fish; Low\_Frequency\_Burst\}, 2 = \{ Tomte; Extremely\_Loud \}, 3 = \{ Whistle; Fast\_Scattering \}, 4 = \{ Blip\_Low\_Frequency ; Scattered\_Light \} and 5 = \{ Blip; Fast\_Scattering \} )
+Each of the strategies are trained for 100 epochs on every task (of distinguishing between two glitch categories). The order in which the classes are fed is kept the same over all strategies:  
+(Firstly, \{'Koi\_Fish' and 'Low\_Frequency\_Burst' \}, secondly \{ 'Tomte' and 'Extremely\_Loud' \}, Thirdly \{ 'Whistle' and 'Fast\_Scattering' \}, Fourthly \{ 'Blip\_Low\_Frequency' and 'Scattered\_Light' \} and Finally \{ 'Blip' and 'Fast\_Scattering' \} )
 
 \subsubsection{Naive CL strategy (baseline)}
 \label{subsubsec:RQ1_naive_baseline}
@@ -621,7 +622,7 @@ The training time of the implementation used in the \verb|Avalanche| package\foo
 
 \subsection{RQ2}
 \label{subsec:RQ2}
-Each of the strategies are trained for 15 epochs on every task (of learning the weights on the three classes). More training epochs resulted in overfitting behavior. Between 10 and 15 epochs of training the results converge. The order in which the classes are fed is kept the same over all strategies (1 = \{Whistle\}, 2 = \{Scattered\_Light \}, 3 = \{Tomte \}).
+Each of the strategies are trained for 15 epochs on every task (of learning the weights on the three classes). More training epochs resulted in overfitting behavior. Between 10 and 15 epochs of training the results converge. The order in which the classes are fed is kept the same over all strategies (Firstly 'Whistle', Secondly 'Scattered\_Light' and finally 'Tomte').
 
 \subsubsection{Naive CL strategy (baseline)}
 \label{subsubsec:RQ2_naive}
@@ -830,12 +831,21 @@ The trained model has an overall accuracy of $90\%$, less than the Naive baselin
 
 The Backward Transfer (BWT) metric is $0.0131$, indicating that the model was successful in mitigating forgetting on the old task while the model learned the new task. A BWT close to zero (ideal scenario) indicates that the model is able to maintain its performance on old tasks while learning new ones with no degradation in performance on old tasks.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Grad Assignment/Images/tSNE_FractalDimension_DER_test.png}
+    \caption{t-SNE visualization DER FD strategy}
+    \label{fig:tsne_FD_DER}
+\end{figure}
 
+The \acrshort{tsne} plot in Figure \ref{fig:tsne_FD_DER} indicates that the model struggles significantly to distinguish 'Tomte' from the other two categories.
+
+\newpage
 \subsubsection{DER++ strategy}
 \label{subsubsec:RQ2_der++}
 The strategy is implemented with the identical hyperparameter values as described in \ref{subsubsec:RQ1_DER++} with the benchmark as described in \ref{subsubsec:RQ2_naive}. \\
 The trained model has an overall accuracy of $77\%$, this is the worst performing model. The F1 scores (see Table \ref{tbl:RQ2_class_report_FD_DER++}) are all less than those of the Naive baseline. Especially very bad performance metrics on the 'Tomte' glitch. 
-\begin{figure}[!ht]
+\begin{figure}[ht]
 \centering
 \begin{subfigure}
   \centering
@@ -865,11 +875,11 @@ The trained model has an overall accuracy of $77\%$, this is the worst performin
     \label{tbl:RQ2_class_report_FD_DER++}
 \end{table}
 
-The Backward Transfer (BWT) metric is $-0.0458$, suggesting the model had a slight decline in performance on the old task after learning the new task. However, the magnitude of forgetting is relatively small. 
+The Backward Transfer (BWT) metric is $-0.0458$, suggesting that the model had a slight decline in performance on the old task after learning the new task. However, the magnitude of forgetting is relatively small. 
 
 The \acrshort{tsne} plot in \ref{fig:tsne_FD_DER++} illustrates the difficulty of differentiating between 'Tomte' and the other two classes. 
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{Grad Assignment/Images/tSNE_FractalDimension_DER++_test.png}
     \caption{t-SNE visualization DER++ FD strategy}
@@ -880,7 +890,7 @@ The \acrshort{tsne} plot in \ref{fig:tsne_FD_DER++} illustrates the difficulty o
 \subsubsection{SCR strategy}
 \label{subsubsec:RQ2_scr}
 The \acrshort{scr} stategy on the Fractal Dimension data has a similar implementation as in \ref{subsub:RQ1_SCR}. The model has an overall accuracy of $93\%$ and scores second just after the Naive strategy used in \ref{subsubsec:RQ2_naive}. 
-The weight distributions shown in Figure \ref{tbl:scr_fd_weights} indicate the difficulty the model has with distinguishing 'Whistle' and 'Tomte' glitches. Behavior that is confirmed by the \acrshort{tsne} and \acrshort{umap} plots in Figures \ref{fig:tsne_FD_SCR} and \ref{fig:umap_FD_SCR}. 
+The weight distributions shown in Figure \ref{tbl:scr_fd_weights} indicate the difficulty the model has with distinguishing 'Whistle' and 'Tomte' glitches. Behavior confirmed by the \acrshort{tsne} and \acrshort{umap} plots in Figures \ref{fig:tsne_FD_SCR} and \ref{fig:umap_FD_SCR}. 
 \begin{center}
 \begin{tabular}{cc}
 \includegraphics[width=0.4\textwidth]{Images/SCR_MultiView_exp_0.png} & \includegraphics[width=0.4\textwidth]{Images/SCR_MultiView_exp_2.png} \\
@@ -920,7 +930,7 @@ The Backward Transfer (BWT) metric is $0.3595$, a high value, suggesting that th
 
 \subsection{RQ3}
 \label{subsub:rq3}
-The training is done on the dataset provided by Melissa Lopez, used in the research by \citep{laguarta2023detection, dooney2022dvgan, dooney2024cdvgan}. The training is done for 30 epochs on the classes \{Whistle, Scattered\_Light, Tomte\}. 
+The training is done on the dataset provided by Melissa Lopez, used in the research by \citep{laguarta2023detection, dooney2022dvgan, dooney2024cdvgan}. The training is done for 30 epochs on the classes \{'Whistle', 'Scattered\_Light', 'Tomte'\}. 
 
 The ultimate version of the model achieved a Cross Entropy Loss of $0.0122$ and a training accuracy of $99.61\%$. The outcomes detailed in Table \ref{tbl:RQ3_class_report_multimodal} for the unseen test samples were remarkably impressive, demonstrating flawless precision, recall, and f1-score across all three categories. Notably, the performance on the Tomte glitch significantly surpassed that of earlier 'best' models as discussed in \ref{subsubsec:RQ1_DER} and \ref{subsubsec:RQ2_naive}.
 
@@ -947,7 +957,7 @@ The resulting \acrshort{tsne} plot confirms the perfect test set results. There 
     \label{fig:tsne_multimodal}
 \end{figure}
 \newpage
-The Saliency mapping in Figure \ref{fig:saliency_mapping_multimodal} illustrates the distinctive capabilities of the model. There are clear boundaries between the three glitch categories. 
+The Saliency mapping in Figure \ref{fig:saliency_mapping_multimodal} illustrates the distinctive capabilities of the model. There are clearly separated gradient areas for the three glitch categories. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{Grad Assignment/Images/SaliencyMapping_Multimodal_test.png}

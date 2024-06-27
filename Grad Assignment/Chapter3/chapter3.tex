@@ -6,15 +6,15 @@
 The upcoming research will investigate the following questions:  
 
 \begin{mdframed}[backgroundcolor=lightgray!20]
-\par RQ1: Do classes learned from a continual learning approach align with existing gravity spy classes?\\
-RQ2: How effective are continual learning approaches when incorporating auxiliary channel data for detecting and classifying glitch morphologies?\\
-RQ3: What if strain data (spectrograms) are combined with auxiliary channel data in a multimodal approach? Does this learn a robust classification?
+\par RQ1: How do  Continual Learning approaches compare with offline learning for classification of glitches?\\%Do the results of classes learned from a continual learning approach align with existing gravity spy classes?\\
+RQ2: How effective are Continual Learning approaches when incorporating auxiliary channel data for detecting and classifying glitch morphologies?\\
+RQ3: What if strain data (Q-scans) are combined with auxiliary channel data in a multimodal approach? Does this learn a robust classification?
 \end{mdframed}
 
 \subsection{Research method}
 \label{subsec-researchmethod}
 \subsubsection{RQ1}
-In order to evaluate the alignment between classes acquired from a \acrlong{cl} approach and existing gravity spy classes, we proceed with the following steps:
+In order to evaluate the performance and alignment between classes acquired from a \acrlong{cl} approach and existing offline methods on gravity spy classes, we proceed with the following steps:
 \begin{itemize}
     \item Data preprocessing is required for the utilization of a \acrshort{cl} approach, involving the selection of either the O3a or O3b dataset that includes labeled data with various glitch categories. This dataset will be segmented into sequential chunks to represent a continuous data stream.
     \item Model selection and Training: A proper \acrshort{cl} algorithm will be chosen, taking into account aspects such as memory usage and its ability to reduce catastrophic forgetting. The model will be trained gradually on the segmented data, mimicking a continual learning scenario.
